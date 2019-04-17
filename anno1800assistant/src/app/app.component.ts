@@ -36,6 +36,11 @@ export class Island {
 
     let fishery = new Factory(Factories.filter(f => f.ID === 1010278)[0], 0);
     this.Factories.push(fishery);
+    
+    let potato = new Factory(Factories.filter(f => f.ID === 1010265)[0], 1)
+    let schnapps = new Factory(Factories.filter(f => f.ID === 1010294)[0], 0, [potato]);
+    this.Factories.push(schnapps);
+    this.Factories.push(potato);    
 
     let sheepFarm = new Factory(Factories.filter(f => f.ID === 1010267)[0], 1)
     let knitter = new Factory(Factories.filter(f => f.ID === 1010315)[0], 0, [sheepFarm]);

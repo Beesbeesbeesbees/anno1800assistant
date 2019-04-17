@@ -135,9 +135,18 @@ namespace AnnoXMLParser {
                     string sAmount = inputXML.Elements().SingleOrDefault(x => x.Name == "Amount")?.Value;
                     string sMoneyValue = inputXML.Elements().SingleOrDefault(x => x.Name == "MoneyValue")?.Value;
 
-                    if (!string.IsNullOrEmpty(sProductID) && !string.IsNullOrEmpty(sSupplyWeight) && !string.IsNullOrEmpty(sAmount)) {
-                        PopulationInput input = new PopulationInput() { ProductID = int.Parse(sProductID), SupplyWeight = int.Parse(sSupplyWeight), Amount = decimal.Parse(sAmount) };
+                    if (!string.IsNullOrEmpty(sProductID) && !string.IsNullOrEmpty(sAmount)) {
+                        decimal amount;
+                        if (!decimal.TryParse(sAmount, out amount)) {
+                            decimal.Parse(sAmount, System.Globalization.NumberStyles.Float);
+                        }
+
+                        PopulationInput input = new PopulationInput() { ProductID = int.Parse(sProductID), Amount = amount };
                         inputs.Add(input);
+
+                        if (!string.IsNullOrEmpty(sSupplyWeight)) {
+                            input.SupplyWeight = int.Parse(sSupplyWeight);
+                        }
 
                         if (!string.IsNullOrEmpty(sMoneyValue)) {
                             input.MoneyValue = int.Parse(sMoneyValue);
