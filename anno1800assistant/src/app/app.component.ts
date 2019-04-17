@@ -37,13 +37,19 @@ export class Island {
     this.addFactoryChain(1010278); // Fishery    
     this.addFactoryChain(1010294); // Schnapps
     this.addFactoryChain(1010315); // Knitter
+    this.addFactoryChain(1010316); // Sausages
+    this.addFactoryChain(1010291); // Bread
+    this.addFactoryChain(1010281); // Soap
+    this.addFactoryChain(1010292); // Beer
   }
 
-  addFactoryChain(productID: number) {
-    let factory = new Factory(Factories.filter(f => f.ID === productID)[0]);
+
+  addFactoryChain(factoryID: number) {
+    let factory = new Factory(Factories.filter(f => f.ID === factoryID)[0]);
     this.Factories.push(factory);
     this.processChildFactories(factory);
   }
+
 
   processChildFactories(factory: Factory) {
     for (var i = 0; i < factory.Inputs.length; i++) {
