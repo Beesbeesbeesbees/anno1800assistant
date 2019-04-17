@@ -10,11 +10,11 @@ using System.Xml.Linq;
 namespace AnnoXMLParser {
     class Program {
         static void Main(string[] args) {
-            XDocument doc = XDocument.Load(@"C:\Users\kbugd\OneDrive\Desktop\assets.xml");
+            string assetsXmlPath = @"C:\Path\assets.xml";
+            string outputFolder = @"C:\Path\";
 
-            //var test = doc.FirstNode as XElement;
 
-
+            XDocument doc = XDocument.Load(assetsXmlPath);
             Stack<XElement> queue = new Stack<XElement>(doc.Elements());
             List<XElement> factoryXMLs = new List<XElement>();
             List<XElement> productXMLs = new List<XElement>();
@@ -149,13 +149,13 @@ namespace AnnoXMLParser {
             }
 
             var productsJSON = JsonConvert.SerializeObject(products.ToArray());
-            File.WriteAllText(@"C:\Users\kbugd\OneDrive\Desktop\products.json", productsJSON);
+            File.WriteAllText(outputFolder + "products.json", productsJSON);
 
             var factoriesJSON = JsonConvert.SerializeObject(factories.ToArray());
-            File.WriteAllText(@"C:\Users\kbugd\OneDrive\Desktop\factories.json", factoriesJSON);
+            File.WriteAllText(outputFolder + "factories.json", factoriesJSON);
 
             var populationJSON = JsonConvert.SerializeObject(populationLevels.ToArray());
-            File.WriteAllText(@"C:\Users\kbugd\OneDrive\Desktop\populations.json", populationJSON);
+            File.WriteAllText(outputFolder + "populations.json", populationJSON);
         }
     }
 
