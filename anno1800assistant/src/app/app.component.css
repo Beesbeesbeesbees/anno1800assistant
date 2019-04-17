@@ -1,11 +1,18 @@
 .island {
-    text-align: center;
     border: 1px solid gray;
     padding: 5px;
     margin: 5px;
     display: inline-block;
 }
 
+.islandNameContainer {
+    text-align: center;    
+}
+
 .islandName {
+    
+}
+
+.promoteButton {
     
 }

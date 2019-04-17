@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PopulationLevelsFactory, PopulationLevel } from './data/populations';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.reset();
+
+    this.populationLevels[0].PopulationCountFormula = () => {
+      return 5;
+    };
   }
 
   reset() {    
@@ -17,6 +22,7 @@ export class AppComponent implements OnInit {
   }
 
   islands: Island[]
+  populationLevels: PopulationLevel[] = new PopulationLevelsFactory().GetPopulationLevels();
 }
 
 

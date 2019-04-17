@@ -1,5 +1,7 @@
-<span *ngFor="let island of islands" class="island">  
-  <input class="islandName" type="text" id="name" name="name" [(ngModel)]="island.Name" />
+<span *ngFor="let island of islands" class="island">
+  <div class="islandNameContainer">
+    <input class="islandName" type="text" [(ngModel)]="island.Name" />
+  </div>
   <br />
 
   <!-- Population and Dwellings -->
@@ -10,5 +12,20 @@
       <td>Pop Adjustment</td>
       <td>Population</td>
     </tr>
+    <ng-container *ngFor="let populationLevel of populationLevels; index as i">
+      <tr>
+        <td>{{ populationLevel.Name }}</td>
+        <td><input type="number" [(ngModel)]="populationLevel.HouseCount" /></td>
+        <td><input type="number" [(ngModel)]="populationLevel.PopulationAdjustment" /></td>
+        <td>{{ populationLevel.Population }}</td>
+      </tr>
+      <tr *ngIf="populationLevel.PromotionTarget">
+        <td></td>
+        <input type="button" (click)="populationLevel.Promote(1)" value="v" class="promoteButton">
+        <td></td>
+        <td></td>
+      </tr>
+      <tr *ngIf="i === 4"><td colspan="4"><br /></td></tr>
+    </ng-container>
   </table>
 </span>
