@@ -7,17 +7,17 @@
   <!-- Population and Dwellings -->
   <table>
     <tr>
-      <td>Level</td>
+      <td></td>
       <td>Houses</td>
-      <td>Pop Adjustment</td>
+      <td>Pop<br />Adjust</td>
       <td>Population</td>
     </tr>
-    <ng-container *ngFor="let populationLevel of populationLevels; index as i">
+    <ng-container *ngFor="let populationLevel of island.PopulationLevels; index as i">
       <tr>
         <td>{{ populationLevel.Name }}</td>
         <td><input type="number" [(ngModel)]="populationLevel.HouseCount" /></td>
         <td><input type="number" [(ngModel)]="populationLevel.PopulationAdjustment" /></td>
-        <td>{{ populationLevel.Population }}</td>
+        <td>{{ populationLevel.GetPopulation(island.Factories) }}</td>
       </tr>
       <tr *ngIf="populationLevel.PromotionTarget">
         <td></td>
@@ -28,4 +28,34 @@
       <tr *ngIf="i === 4"><td colspan="4"><br /></td></tr>
     </ng-container>
   </table>
+
+  <!-- Factories -->
+  <div class="factories">
+    <div class="factoryHeader">
+      <span class="factoryNameColumn">
+      </span>
+      <span class="enabledColumn">Enable</span>
+      <span class="productivityColumn">Productivity</span>
+      <span class="requiredColumn">Required</span>
+      <span class="builtColumn">Built</span>
+    </div>
+    <div *ngFor="let factory of island.Factories">
+      <span class="factoryNameColumn">
+        <ng-container *ngFor="let indentLevel of [1, 2, 3, 4, 5]">
+          <span *ngIf="factory.ChildLevel >= indentLevel" class="indent">></span>
+        </ng-container>
+        <span>{{ factory.Name }}</span>
+      </span>
+      <span class="enabledColumn">
+        <input type="checkbox" *ngIf="factory.ChildLevel === 0" [(ngModel)]="factory.Enabled" />
+      </span>
+      <span class="productivityColumn" >
+        <input type="number" [(ngModel)]="factory.Productivity" [disabled]="!factory.Enabled" />
+      </span>
+      <span class="requiredColumn">{{ factory.GetRequiredCount(island.PopulationLevels, island.Factories) }}</span>
+      <span class="builtColumn">
+        <input type="number" [(ngModel)]="factory.BuiltCount" [disabled]="!factory.Enabled" />
+      </span>
+    </div>
+  </div>
 </span>

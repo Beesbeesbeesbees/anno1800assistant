@@ -9,6 +9,45 @@
     text-align: center;    
 }
 
+.factories {
+    text-align: center;
+}
+
+input[type="number"] {
+    width: 40px;
+}
+
+.factories .factoryNameColumn {
+    width: 160px;
+    display: inline-block;
+    text-align: left;
+}
+
+.productivityColumn {
+    width: 100px;
+    display: inline-block;
+}
+
+.enabledColumn {
+    width: 60px;
+    display: inline-block;
+}
+
+.requiredColumn {
+    width: 70px;
+    display: inline-block;
+}
+
+.builtColumn {
+    width: 45px;
+    display: inline-block;
+}
+
+.indent {
+    width: 20px;
+    display: inline-block;
+}
+
 .islandName {
     
 }

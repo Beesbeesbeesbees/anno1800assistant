@@ -1,3 +1,5 @@
+import { Factory } from "./factories";
+
 export class PopulationLevelsFactory {
     private rawData: PopulationLevelRaw[] = [
         {"Name":"Obreros","Inputs":[{"ProductID":120033,"Amount":0.000952381,"SupplyWeight":3,"MoneyValue":25},{"ProductID":120043,"Amount":0.000833333,"SupplyWeight":2,"MoneyValue":25},{"ProductID":120035,"Amount":0.00047619,"SupplyWeight":4,"MoneyValue":10},{"ProductID":120032,"Amount":0.000196079,"SupplyWeight":2,"MoneyValue":10},{"ProductID":120037,"Amount":0.000444444,"SupplyWeight":2,"MoneyValue":10},{"ProductID":1010206,"Amount":0.000416667,"SupplyWeight":2,"MoneyValue":25}]},
@@ -42,13 +44,27 @@ export class PopulationLevel extends PopulationLevelRaw {
     }
 
     HouseCount: number = 0
-    PopulationAdjustment: number= 0
-    PopulationCountFormula: () => number
+    PopulationAdjustment: number = 0    
     PromotionTarget: PopulationLevel
     
-    get Population(): number {
-        let count = this.PopulationCountFormula ? this.PopulationCountFormula() * this.HouseCount : 0;
-        return count + (this.PopulationAdjustment || 0);
+    GetPopulation(factories: Factory[]): number {
+        let supplyWeight = 5;
+
+        let enabledOutputProductIDs = {};
+        for (var i = 0; i < factories.length; i++) {
+            if (factories[i].Enabled) {
+                enabledOutputProductIDs[factories[i].Outputs[0].ProductID] = true;
+            }
+        }
+
+        for (var i = 0; i < this.Inputs.length; i++) {
+            let enabled = enabledOutputProductIDs[this.Inputs[i].ProductID];
+            if (enabled) {
+                supplyWeight += this.Inputs[i].SupplyWeight;
+            }
+        }
+
+        return supplyWeight * this.HouseCount;        
     }
     
     Promote(promotionCount: number): void {
@@ -58,6 +74,15 @@ export class PopulationLevel extends PopulationLevelRaw {
 
         this.HouseCount -= promotionCount;
         this.PromotionTarget.HouseCount += promotionCount;
+    }
+
+    GetProductRequirement(productID: number, factories: Factory[]): number {
+        let input = this.Inputs.filter(i => i.ProductID === productID)[0];
+        if (input) {
+            return input.Amount * this.GetPopulation(factories);
+        }
+
+        return 0;
     }
 }
 
