@@ -12,7 +12,7 @@ class FactoryRaw {
 }
 
 export class Factory extends FactoryRaw {
-    constructor(raw: FactoryRaw, childLevel: number) {
+    constructor(raw: FactoryRaw, childLevel: number, childFactories?: Factory[]) {
         super();
         this.ID = raw.ID;
         this.Name = raw.Name;
@@ -20,9 +20,23 @@ export class Factory extends FactoryRaw {
         this.Inputs = raw.Inputs;
         this.Outputs = raw.Outputs;
         this.ChildLevel = childLevel;
+        this.ChildFactories = childFactories || [];
     }
 
-    Enabled: boolean = false
+    private ChildFactories: Factory[]
+    
+    _enabled: boolean = false
+    get Enabled(): boolean {
+        return this._enabled;
+    }
+
+    set Enabled(newVal: boolean) {
+        this._enabled = newVal;
+        for(var i = 0; i < this.ChildFactories.length; i++) {
+            this.ChildFactories[i].Enabled = this.Enabled;
+        }
+    }
+
     BuiltCount: number = 0
     Productivity: number = 100
     ChildLevel: number = 0

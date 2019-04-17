@@ -32,10 +32,14 @@ export class Island {
   constructor(name: string) {
     this.Name = name;
     this.PopulationLevels = new PopulationLevelsFactory().GetPopulationLevels();
-    this.Factories = [
-      new Factory(Factories.filter(f => f.ID === 1010278)[0], 0), // Fishery
-      new Factory(Factories.filter(f => f.ID === 1010315)[0], 0), // Knitter
-      new Factory(Factories.filter(f => f.ID === 1010267)[0], 1), // Sheep Farm
-    ];
+    this.Factories = [];
+
+    let fishery = new Factory(Factories.filter(f => f.ID === 1010278)[0], 0);
+    this.Factories.push(fishery);
+
+    let sheepFarm = new Factory(Factories.filter(f => f.ID === 1010267)[0], 1)
+    let knitter = new Factory(Factories.filter(f => f.ID === 1010315)[0], 0, [sheepFarm]);
+    this.Factories.push(knitter);
+    this.Factories.push(sheepFarm);    
   }
 }
