@@ -23,7 +23,7 @@ namespace AnnoXMLParser {
             while (queue.Any()) {
                 var element = queue.Pop();
 
-                if (element.Name == "Template" && (element.Value == "FactoryBuilding7" || element.Value == "FarmBuilding" || element.Value == "HeavyFactoryBuilding")) {
+                if (element.Name == "Template" && (element.Value == "FactoryBuilding7" || element.Value == "FarmBuilding" || element.Value == "HeavyFactoryBuilding" || element.Value == "PublicServiceBuilding")) {
                     factoryXMLs.Add(element.Parent);
                 }
 
@@ -58,6 +58,8 @@ namespace AnnoXMLParser {
 
             var factories = new List<Factory>();
             foreach (var factoryXML in factoryXMLs) {
+                bool isPublicService = factoryXML.Elements().Single(x => x.Name == "Template").Value == "PublicServiceBuilding";
+
                 int id = int.Parse(factoryXML.Elements()
                     .Single(x => x.Name == "Values").Elements()
                     .Single(x => x.Name == "Standard").Elements()
@@ -76,39 +78,58 @@ namespace AnnoXMLParser {
                     .Single(x => x.Name == "Text").Value;
 
                 List<FactoryIngredient> inputs = new List<FactoryIngredient>();
-                var inputXMLs = factoryXML.Elements()
-                    ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
-                    ?.SingleOrDefault(x => x.Name == "FactoryBase")?.Elements()
-                    ?.SingleOrDefault(x => x.Name == "FactoryInputs")?.Elements();
 
-                foreach (var inputXML in inputXMLs ?? Enumerable.Empty<XElement>()) {
-                    int productID = int.Parse(inputXML.Elements()
-                        .Single(x => x.Name == "Product")
-                        .Value);
+                if (!isPublicService) {
+                    var inputXMLs = factoryXML.Elements()
+                        ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
+                        ?.SingleOrDefault(x => x.Name == "FactoryBase")?.Elements()
+                        ?.SingleOrDefault(x => x.Name == "FactoryInputs")?.Elements();
 
-                    int amount = int.Parse(inputXML.Elements()
-                        .Single(x => x.Name == "Amount")
-                        .Value);
+                    foreach (var inputXML in inputXMLs ?? Enumerable.Empty<XElement>()) {
+                        int productID = int.Parse(inputXML.Elements()
+                            .Single(x => x.Name == "Product")
+                            .Value);
 
-                    inputs.Add(new FactoryIngredient() { ProductID = productID, Amount = amount });
+                        int amount = int.Parse(inputXML.Elements()
+                            .Single(x => x.Name == "Amount")
+                            .Value);
+
+                        inputs.Add(new FactoryIngredient() { ProductID = productID, Amount = amount });
+                    }
                 }
 
                 List<FactoryIngredient> outputs = new List<FactoryIngredient>();
-                var outputXMLs = factoryXML.Elements()
-                    ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
-                    ?.SingleOrDefault(x => x.Name == "FactoryBase")?.Elements()
-                    ?.SingleOrDefault(x => x.Name == "FactoryOutputs")?.Elements();
+                if (isPublicService) {
+                    var outputXMLs = factoryXML.Elements()
+                        ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
+                        ?.SingleOrDefault(x => x.Name == "PublicService")?.Elements()
+                        ?.SingleOrDefault(x => x.Name == "PublicServiceOutputs")?.Elements();
 
-                foreach (var outputXML in outputXMLs ?? Enumerable.Empty<XElement>()) {
-                    int productID = int.Parse(outputXML.Elements()
-                        .Single(x => x.Name == "Product")
-                        .Value);
+                    foreach (var outputXML in outputXMLs ?? Enumerable.Empty<XElement>()) {
+                        int productID = int.Parse(outputXML.Elements()
+                            .Single(x => x.Name == "Product")
+                            .Value);                        
 
-                    int amount = int.Parse(outputXML.Elements()
-                        .Single(x => x.Name == "Amount")
-                        .Value);
+                        outputs.Add(new FactoryIngredient() { ProductID = productID, Amount = 0 });
+                    }
+                }
+                else {
+                    var outputXMLs = factoryXML.Elements()
+                        ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
+                        ?.SingleOrDefault(x => x.Name == "FactoryBase")?.Elements()
+                        ?.SingleOrDefault(x => x.Name == "FactoryOutputs")?.Elements();
 
-                    outputs.Add(new FactoryIngredient() { ProductID = productID, Amount = amount });
+                    foreach (var outputXML in outputXMLs ?? Enumerable.Empty<XElement>()) {
+                        int productID = int.Parse(outputXML.Elements()
+                            .Single(x => x.Name == "Product")
+                            .Value);
+
+                        int amount = int.Parse(outputXML.Elements()
+                            .Single(x => x.Name == "Amount")
+                            .Value);
+
+                        outputs.Add(new FactoryIngredient() { ProductID = productID, Amount = amount });
+                    }
                 }
 
                 factories.Add(new Factory() { ID = id, Name = name, CycleTime = cycleTime, Inputs = inputs.ToArray(), Outputs = outputs.ToArray() });
@@ -135,14 +156,17 @@ namespace AnnoXMLParser {
                     string sAmount = inputXML.Elements().SingleOrDefault(x => x.Name == "Amount")?.Value;
                     string sMoneyValue = inputXML.Elements().SingleOrDefault(x => x.Name == "MoneyValue")?.Value;
 
-                    if (!string.IsNullOrEmpty(sProductID) && !string.IsNullOrEmpty(sAmount)) {
-                        decimal amount;
-                        if (!decimal.TryParse(sAmount, out amount)) {
-                            decimal.Parse(sAmount, System.Globalization.NumberStyles.Float);
-                        }
-
-                        PopulationInput input = new PopulationInput() { ProductID = int.Parse(sProductID), Amount = amount };
+                    if (!string.IsNullOrEmpty(sProductID) && (!string.IsNullOrEmpty(sAmount) || !string.IsNullOrEmpty(sSupplyWeight))) {
+                        PopulationInput input = new PopulationInput() { ProductID = int.Parse(sProductID) };
                         inputs.Add(input);
+
+                        if (!string.IsNullOrEmpty(sAmount)) {
+                            decimal amount = 0m;
+                            if (!decimal.TryParse(sAmount, out amount)) {
+                                decimal.Parse(sAmount, System.Globalization.NumberStyles.Float);
+                            }
+                            input.Amount = amount;
+                        }
 
                         if (!string.IsNullOrEmpty(sSupplyWeight)) {
                             input.SupplyWeight = int.Parse(sSupplyWeight);

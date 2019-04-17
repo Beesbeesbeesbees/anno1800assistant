@@ -34,6 +34,7 @@ export class Island {
     this.PopulationLevels = new PopulationLevelsFactory().GetPopulationLevels();
     this.Factories = [];
 
+    // Referencing factories by ID here for possible additional language support
     this.addFactoryChain(1010278); // Fishery    
     this.addFactoryChain(1010294); // Schnapps
     this.addFactoryChain(1010315); // Knitter
@@ -41,6 +42,7 @@ export class Island {
     this.addFactoryChain(1010291); // Bread
     this.addFactoryChain(1010281); // Soap
     this.addFactoryChain(1010292); // Beer
+    this.addFactoryChain(1010360); // School
   }
 
 

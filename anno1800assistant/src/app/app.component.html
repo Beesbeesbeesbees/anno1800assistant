@@ -9,23 +9,20 @@
     <tr>
       <td></td>
       <td>Houses</td>
-      <td>Pop<br />Adjust</td>
-      <td>Population</td>
+      <td>Pop</td>
     </tr>
     <ng-container *ngFor="let populationLevel of island.PopulationLevels; index as i">
       <tr>
         <td>{{ populationLevel.Name }}</td>
-        <td><input type="number" [(ngModel)]="populationLevel.HouseCount" /></td>
-        <td><input type="number" [(ngModel)]="populationLevel.PopulationAdjustment" /></td>
+        <td><input type="number" [(ngModel)]="populationLevel.HouseCount" /></td>        
         <td>{{ populationLevel.GetPopulation(island.Factories) }}</td>
       </tr>
       <tr *ngIf="populationLevel.PromotionTarget">
         <td></td>
-        <input type="button" (click)="populationLevel.Promote(1)" value="v" class="promoteButton">
-        <td></td>
+        <input type="button" (click)="populationLevel.Promote(1)" value="v" class="promoteButton">        
         <td></td>
       </tr>
-      <tr *ngIf="i === 4"><td colspan="4"><br /></td></tr>
+      <tr *ngIf="i === 4"><td colspan="3"><br /></td></tr>
     </ng-container>
   </table>
 
@@ -39,21 +36,25 @@
       <span class="requiredColumn">Required</span>
       <span class="builtColumn">Built</span>
     </div>
-    <div *ngFor="let factory of island.Factories">
+    <!-- Hiding the last of the columns for factories whose outputs have zero amounts. These are public service buildings and are only included for population count. -->
+    <div *ngFor="let factory of island.Factories" [className]="factory.Outputs[0].Amount === 0 ? 'publicService' : ''">
       <span class="factoryNameColumn">        
-        <span *ngIf="factory.ParentFactory" class="indent">></span>
-        <span *ngIf="factory.ParentFactory && factory.ParentFactory.ParentFactory" class="indent">></span>
+        <span *ngIf="factory.ParentFactory" class="indent"></span>
+        <span *ngIf="factory.ParentFactory && factory.ParentFactory.ParentFactory" class="indent"></span>
         <span>{{ factory.Name }}</span>
       </span>
       <span class="enabledColumn">
         <input type="checkbox" *ngIf="!factory.ParentFactory" [(ngModel)]="factory.Enabled" />
-      </span>
+      </span>      
       <span class="productivityColumn" >
-        <input type="number" [(ngModel)]="factory.Productivity" [disabled]="!factory.Enabled" />
+        <input class="hiddenForPublicService" type="number" [(ngModel)]="factory.Productivity" [disabled]="!factory.Enabled" />
       </span>
-      <span class="requiredColumn">{{ factory.GetRequiredCount(island.PopulationLevels, island.Factories) }}</span>
+      <span class="requiredColumn">
+        <span class="hiddenForPublicService">
+          {{ factory.GetRequiredCount(island.PopulationLevels, island.Factories) }}</span>
+        </span>
       <span class="builtColumn">
-        <input type="number" [(ngModel)]="factory.BuiltCount" [disabled]="!factory.Enabled" />
+        <input class="hiddenForPublicService" type="number" [(ngModel)]="factory.BuiltCount" [disabled]="!factory.Enabled" />
       </span>
     </div>
   </div>
