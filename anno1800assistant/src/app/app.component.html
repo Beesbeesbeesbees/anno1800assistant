@@ -40,14 +40,13 @@
       <span class="builtColumn">Built</span>
     </div>
     <div *ngFor="let factory of island.Factories">
-      <span class="factoryNameColumn">
-        <ng-container *ngFor="let indentLevel of [1, 2, 3, 4, 5]">
-          <span *ngIf="factory.ChildLevel >= indentLevel" class="indent">></span>
-        </ng-container>
+      <span class="factoryNameColumn">        
+        <span *ngIf="factory.ParentFactory" class="indent">></span>
+        <span *ngIf="factory.ParentFactory && factory.ParentFactory.ParentFactory" class="indent">></span>
         <span>{{ factory.Name }}</span>
       </span>
       <span class="enabledColumn">
-        <input type="checkbox" *ngIf="factory.ChildLevel === 0" [(ngModel)]="factory.Enabled" />
+        <input type="checkbox" *ngIf="!factory.ParentFactory" [(ngModel)]="factory.Enabled" />
       </span>
       <span class="productivityColumn" >
         <input type="number" [(ngModel)]="factory.Productivity" [disabled]="!factory.Enabled" />

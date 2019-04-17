@@ -34,17 +34,30 @@ export class Island {
     this.PopulationLevels = new PopulationLevelsFactory().GetPopulationLevels();
     this.Factories = [];
 
-    let fishery = new Factory(Factories.filter(f => f.ID === 1010278)[0], 0);
-    this.Factories.push(fishery);
-    
-    let potato = new Factory(Factories.filter(f => f.ID === 1010265)[0], 1)
-    let schnapps = new Factory(Factories.filter(f => f.ID === 1010294)[0], 0, [potato]);
-    this.Factories.push(schnapps);
-    this.Factories.push(potato);    
+    this.addFactoryChain(1010278); // Fishery    
+    this.addFactoryChain(1010294); // Schnapps
+    this.addFactoryChain(1010315); // Knitter
+  }
 
-    let sheepFarm = new Factory(Factories.filter(f => f.ID === 1010267)[0], 1)
-    let knitter = new Factory(Factories.filter(f => f.ID === 1010315)[0], 0, [sheepFarm]);
-    this.Factories.push(knitter);
-    this.Factories.push(sheepFarm);    
+  addFactoryChain(productID: number) {
+    let factory = new Factory(Factories.filter(f => f.ID === productID)[0]);
+    this.Factories.push(factory);
+    this.processChildFactories(factory);
+  }
+
+  processChildFactories(factory: Factory) {
+    for (var i = 0; i < factory.Inputs.length; i++) {
+      let childFactory = Factories.filter(f => 
+        f.Outputs.filter(output => output.ProductID === factory.Inputs[i].ProductID).length > 0
+      )[0];
+
+      if (childFactory) {
+        let newFactory = new Factory(childFactory);
+        factory.ChildFactories.push(newFactory);
+        newFactory.ParentFactory = factory;
+        this.Factories.push(newFactory);
+        this.processChildFactories(newFactory);
+      }
+    }
   }
 }

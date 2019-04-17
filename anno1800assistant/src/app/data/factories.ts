@@ -12,18 +12,17 @@ class FactoryRaw {
 }
 
 export class Factory extends FactoryRaw {
-    constructor(raw: FactoryRaw, childLevel: number, childFactories?: Factory[]) {
+    constructor(raw: FactoryRaw) {
         super();
         this.ID = raw.ID;
         this.Name = raw.Name;
         this.CycleTime = raw.CycleTime;
         this.Inputs = raw.Inputs;
         this.Outputs = raw.Outputs;
-        this.ChildLevel = childLevel;
-        this.ChildFactories = childFactories || [];
     }
 
-    private ChildFactories: Factory[]
+    ChildFactories: Factory[] = []
+    ParentFactory?: Factory = null
     
     _enabled: boolean = false
     get Enabled(): boolean {
@@ -48,16 +47,27 @@ export class Factory extends FactoryRaw {
 
         let amountRequiredPerMinute = 0;
         let outputProductID = this.Outputs[0].ProductID;
+        let cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;
 
         for (var i = 0; i < populationLevels.length; i++) {
             amountRequiredPerMinute += populationLevels[i].GetProductRequirement(outputProductID, factories);
         }
 
+        let requiredFactoriesFromParent = 0;
+        if (this.ParentFactory) {
+            let parentInput = this.ParentFactory.Inputs.filter(i => i.ProductID === outputProductID)[0];
+            if (parentInput) {
+                let parentRequiredFactories = this.ParentFactory.GetRequiredCount(populationLevels, factories);
+                let parentCycleTime = this.ParentFactory.CycleTime > 0 ? this.ParentFactory.CycleTime : 30;                
+                let childParentFactoryRatio = parentInput.Amount / this.Outputs[0].Amount * cycleTime / parentCycleTime;
+                requiredFactoriesFromParent = parentRequiredFactories * childParentFactoryRatio;
+            }
+        }
+
         amountRequiredPerMinute *= 6;
-        let cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;
         let producedPerMinute = this.Outputs[0].Amount * 60 / cycleTime;
 
-        return Math.round(amountRequiredPerMinute / producedPerMinute * 1000 * this.Productivity / 100) / 1000;
+        return Math.round((amountRequiredPerMinute / producedPerMinute + requiredFactoriesFromParent) * 1000 * 100 / this.Productivity) / 1000;
     }
 }
 
