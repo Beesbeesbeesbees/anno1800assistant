@@ -11,6 +11,8 @@ export class Factories {
             var result = this.getRaw();
             // Hacking in a factory for electricity since it doesn't seem to count as a public service building in the game files
             result.push({ "ID":1, "Name":"Electricity", "CycleTime":0, "Inputs":[], "Outputs":[{ "ProductID":1010354, "Amount":0 }] });
+            result.push({ "ID":2, "Name":"Chapel", "CycleTime":0, "Inputs":[], "Outputs":[{ "ProductID":120050, "Amount":0 }]});
+            result.push({ "ID":3, "Name":"Boxing Arena", "CycleTime":0, "Inputs":[], "Outputs":[{ "ProductID":1010348, "Amount":0 }]});
             this._allFactories = result;
         }
 
