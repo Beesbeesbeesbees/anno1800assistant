@@ -18,7 +18,7 @@ input[type="number"] {
 }
 
 .factories .factoryNameColumn {
-    width: 160px;
+    width: 180px;
     display: inline-block;
     text-align: left;
 }

@@ -35,14 +35,31 @@ export class Island {
     this.Factories = [];
 
     // Referencing factories by ID here for possible additional language support
+    // Farmers
     this.addFactoryChain(1010278); // Fishery    
     this.addFactoryChain(1010294); // Schnapps
     this.addFactoryChain(1010315); // Knitter
+    // Workers
     this.addFactoryChain(1010316); // Sausages
     this.addFactoryChain(1010291); // Bread
     this.addFactoryChain(1010281); // Soap
     this.addFactoryChain(1010292); // Beer
     this.addFactoryChain(1010360); // School
+    // Artisans
+    this.addFactoryChain(1010295); // Canned Food
+    this.addFactoryChain(1010284); // Sewing Machines
+    this.addFactoryChain(1010340); // Rum
+    this.addFactoryChain(1010325); // Fur Coats
+    this.addFactoryChain(1010362); // University
+    // Engineers
+    this.addFactoryChain(101250); // Glasses
+    this.addFactoryChain(); // High Wheelers
+    this.addFactoryChain(); // Electricity
+    this.addFactoryChain(); // Coffee
+    this.addFactoryChain(); // Pocket Watches
+    this.addFactoryChain(); // Light Bulbs
+    this.addFactoryChain(); // Bank
+    this.addFactoryChain(); // Investors
   }
 
 
