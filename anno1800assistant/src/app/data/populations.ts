@@ -71,8 +71,16 @@ export class PopulationLevel extends PopulationLevelRaw {
             return;
         }
 
+        if (this.HouseCount - promotionCount < 0){
+            promotionCount = this.HouseCount;
+        }
+
         this.HouseCount -= promotionCount;
         this.PromotionTarget.HouseCount += promotionCount;
+    }
+
+    AddHouses(houseCount: number): void {
+        this.HouseCount += houseCount;
     }
 
     GetProductRequirement(productID: number): number {

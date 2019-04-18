@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { PopulationLevelsFactory, PopulationLevel } from './data/populations';
 import { Factory, Factories } from './data/factories';
 
@@ -10,6 +10,10 @@ import { Factory, Factories } from './data/factories';
 export class AppComponent implements OnInit {
   constructor() { }
 
+  islands: Island[]
+  shift_key_held: boolean = false;
+  ctrl_key_held: boolean = false;
+
   ngOnInit() {
     this.reset();
 
@@ -18,9 +22,33 @@ export class AppComponent implements OnInit {
 
   reset() {    
     this.islands = [new Island("First Island")];    
+  }  
+
+  @HostListener('window:keydown', ['$event'])
+  keyDownEvent(event: KeyboardEvent) {        
+    if (event.keyCode === 16) {
+      this.shift_key_held = true;
+    }
+
+    if (event.keyCode === 17) {
+      this.ctrl_key_held = true;
+    }
   }
 
-  islands: Island[]  
+  @HostListener('window:keyup', ['$event'])
+  keyUpEvent(event: KeyboardEvent) {        
+    if (event.keyCode === 16) {
+      this.shift_key_held = false;
+    }
+
+    if (event.keyCode === 17) {
+      this.ctrl_key_held = false;
+    }
+  }
+
+  promotionCount(): number {
+    return 1 * (this.ctrl_key_held ? 5 : 1) * (this.shift_key_held ? 10 : 1);
+  }
 }
 
 

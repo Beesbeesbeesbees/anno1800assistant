@@ -1,30 +1,36 @@
 <span *ngFor="let island of islands" class="island">
   <div class="islandNameContainer">
     <input class="islandName" type="text" [(ngModel)]="island.Name" />
-  </div>
-  <br />
+  </div>  
 
   <!-- Population and Dwellings -->
-  <table>
-    <tr>
-      <td></td>
-      <td>Houses</td>
-      <td>Pop</td>
-    </tr>
-    <ng-container *ngFor="let populationLevel of island.PopulationLevels; index as i">
-      <tr>
-        <td>{{ populationLevel.Name }}</td>
-        <td><input type="number" [(ngModel)]="populationLevel.HouseCount" /></td>        
-        <td>{{ populationLevel.GetPopulation(island.Factories) }}</td>
-      </tr>
-      <tr *ngIf="populationLevel.PromotionTarget">
-        <td></td>
-        <input type="button" (click)="populationLevel.Promote(1)" value="v" class="promoteButton">        
-        <td></td>
-      </tr>
-      <tr *ngIf="i === 4"><td colspan="3"><br /></td></tr>
-    </ng-container>
-  </table>
+  <span class="popLabelColumn"></span>
+  <span *ngFor="let i of [0, 1, 2, 3, 4]" class="houseCountColumn header">
+    {{ island.PopulationLevels[i].Name }}
+  </span>
+  <br />
+
+  <span class="popLabelColumn">Residences</span>
+  <!-- 'Add House' button (only for Farmers and Jornaleros) -->
+  <span type="button" class="btn btn-primary btn-sm addHouseButton" (click)="island.PopulationLevels[0].AddHouses(promotionCount())" title="Tip: Hold Shift and/or Control to change the increment">
+    <span class="fa fa-plus"></span>
+    <span> {{ promotionCount() }}</span>
+  </span>
+  
+  <span *ngFor="let i of [0, 1, 2, 3, 4]" class="houseCountColumn">
+    <!-- 'Upgrade House' button (all population levels except Investors and Obreros) -->
+    <input class="form-control" type="number" [(ngModel)]="island.PopulationLevels[i].HouseCount" />
+    <span type="button" class="btn btn-primary btn-sm" *ngIf="i < 4" (click)="island.PopulationLevels[i].Promote(promotionCount())" title="Tip: Hold Shift and/or Control to change the increment">
+      <span class="fa fa-arrow-circle-up"></span>
+      <span> {{ promotionCount() }}</span>
+    </span>        
+  </span>
+  <br />
+
+  <span class="popLabelColumn">Population</span>
+  <span *ngFor="let i of [0, 1, 2, 3, 4]" class="houseCountColumn populationCount">
+    {{ island.PopulationLevels[i].GetPopulation(island.Factories) }}
+  </span>
 
   <!-- Factories -->
   <div class="factories">

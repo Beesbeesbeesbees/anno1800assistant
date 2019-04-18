@@ -17,6 +17,40 @@ input[type="number"] {
     width: 40px;
 }
 
+.popLabelColumn {
+    width: 90px;
+    display: inline-block;
+}
+
+.houseCountColumn {
+    width: 140px;
+    display: inline-block;
+}
+.houseCountColumn.header {
+    text-align: right;
+    padding-right: 15px;
+}
+.houseCountColumn.populationCount {    
+    padding-left: 68px;
+}
+.houseCountColumn > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+.houseCountColumn > .btn {
+    margin-left: 5px;
+}
+.houseCountColumn > input {
+    width: 80px;
+}
+.addHouseButton {
+    margin-right: 5px;
+}
+.addHouseButton, .houseCountColumn > .btn {
+    text-align: left;
+    width: 50px;
+}
+
 .factories .factoryNameColumn {
     width: 180px;
     display: inline-block;
@@ -49,10 +83,6 @@ input[type="number"] {
 }
 
 .islandName {
-    
-}
-
-.promoteButton {
     
 }
 
