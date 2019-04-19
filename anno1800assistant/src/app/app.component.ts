@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, OnChanges } from '@angular/core';
+import { Component, OnInit, HostListener, OnChanges, ElementRef, ViewChild } from '@angular/core';
 import { PopulationLevelsFactory, PopulationLevel, PopulationLevelSaveInfo } from './data/populations';
 import { Factory, Factories, FactorySaveInfo } from './data/factories';
 
@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   autosave_throttle: Date;
 
   ngOnInit() {
+    this.autosave_throttle = new Date(new Date().getTime() + 100)
     let saveData = window.localStorage.getItem('anno1800assistantsave');
     
     if (!saveData) {
@@ -23,18 +24,13 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    try {
-      this.islands = [];
+    try {      
       let saveObject = JSON.parse(saveData) as IslandSaveInfo[];
-      for (var i = 0; i < saveObject.length; i++) {
-        this.islands.push(new Island(saveObject[i].Name, saveObject[i]));
-      }
+      this.LoadData(saveObject);      
     }
     catch {
       this.Reset();
     }
-
-    this.autosave_throttle = new Date(new Date().getTime() + 100)
   }
 
   ngDoCheck() {
@@ -55,6 +51,38 @@ export class AppComponent implements OnInit {
       return;
     }
 
+    window.localStorage.setItem('anno1800assistantsave', JSON.stringify(this.GenerateSaveData()));
+    this.autosave_throttle = new Date(new Date().getTime() + 100)
+  }
+
+  ManualSave() {  
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.GenerateSaveData()));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href",     dataStr);
+    downloadAnchorNode.setAttribute("download", "anno1800AssistantSaveData.json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  }
+
+  TriggerFileUpload() {
+    let el: HTMLElement = this.loadInput.nativeElement as HTMLElement;
+    el.click();
+  }
+
+  ManualLoad(event: any) {
+    let self = this;
+    var reader = new FileReader();
+
+    reader.onload = function(onLoadEvent: any) {
+      let data = JSON.parse(onLoadEvent.target.result) as IslandSaveInfo[];
+      self.LoadData(data);
+    }
+  
+    reader.readAsText(event.target.files[0]);
+  }
+
+  GenerateSaveData(): IslandSaveInfo[] {
     let save: IslandSaveInfo[] = [];
     for (var i = 0; i < this.islands.length; i++) {
       let island = this.islands[i];
@@ -83,9 +111,17 @@ export class AppComponent implements OnInit {
       });
     }
 
-    window.localStorage.setItem('anno1800assistantsave', JSON.stringify(save));
-    this.autosave_throttle = new Date(new Date().getTime() + 100)
+    return save;
   }
+
+  LoadData(data: IslandSaveInfo[]) {
+    this.islands = [];      
+    for (var i = 0; i < data.length; i++) {
+      this.islands.push(new Island(data[i].Name, data[i]));
+    }
+  }
+
+  @ViewChild('loadInput') loadInput: ElementRef;
 
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: KeyboardEvent) {        

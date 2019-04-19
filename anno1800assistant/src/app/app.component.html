@@ -104,12 +104,26 @@
     </span>
   </div>
 </span>
-<span class="btn btn-primary addIsland" (click)="AddIsland()">
+
+<span type="button" class="btn btn-primary addIsland" (click)="AddIsland()">
   <span class="fa fa-plus"></span>
   <span> Add Island</span>
 </span>
 <br />
-<span class="btn btn-primary addIsland" (click)="Reset()">
+
+<span type="button" class="btn btn-primary bottomButton" (click)="ManualSave()">
+  <span class="fa fa-download"></span>
+  <span> Save</span>
+</span>
+
+<span type="button" class="btn btn-primary bottomButton" (click)="TriggerFileUpload()">
+  <span class="fa fa-upload"></span>
+  <span> Load</span>
+</span>
+
+<span type="button" class="btn btn-primary bottomButton" (click)="Reset()">
   <span class="fa fa-repeat"></span>
   <span> Reset</span>
 </span>
+
+<input type="file" #loadInput (change)="ManualLoad($event)" style="visibility: hidden" >

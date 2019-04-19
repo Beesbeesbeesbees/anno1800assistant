@@ -140,3 +140,7 @@ input[type="number"] {
 .publicService .hiddenForPublicService {
     visibility: hidden;
 }
+
+.bottomButton {
+    margin-left: 5px;
+}
