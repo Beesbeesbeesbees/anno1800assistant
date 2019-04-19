@@ -133,4 +133,8 @@ export class Island {
       }
     }
   }
+
+  enabledFactories() {
+    return this.Factories.filter(f => f.IsInUse(this.PopulationLevels));
+  }
 }

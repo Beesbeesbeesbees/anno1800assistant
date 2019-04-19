@@ -3,6 +3,13 @@
     padding: 5px;
     margin: 5px;
     display: inline-block;
+    background-color: #FFDCAA;
+}
+
+.islandName {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
 }
 
 .islandNameContainer {
@@ -14,7 +21,8 @@
 }
 
 input[type="number"] {
-    width: 40px;
+    width: 80px;
+    display: inline-block;
 }
 
 .popLabelColumn {
@@ -29,6 +37,7 @@ input[type="number"] {
 .houseCountColumn.header {
     text-align: right;
     padding-right: 15px;
+    font-weight: bold;
 }
 .houseCountColumn.populationCount {    
     padding-left: 68px;
@@ -39,9 +48,6 @@ input[type="number"] {
 }
 .houseCountColumn > .btn {
     margin-left: 5px;
-}
-.houseCountColumn > input {
-    width: 80px;
 }
 .addHouseButton {
     margin-right: 5px;
@@ -57,33 +63,39 @@ input[type="number"] {
     text-align: left;
 }
 
+.factoryHeader {
+    font-weight: bold;
+}
+.factoryHeader > * {
+    text-align: center;
+}
+
 .productivityColumn {
     width: 100px;
     display: inline-block;
+    text-align: center;
 }
 
 .enabledColumn {
     width: 60px;
     display: inline-block;
+    text-align: center;
 }
 
 .requiredColumn {
     width: 70px;
     display: inline-block;
+    text-align: center;
 }
 
 .builtColumn {
-    width: 45px;
+    width: 80px;
     display: inline-block;
 }
 
 .indent {
     width: 20px;
     display: inline-block;
-}
-
-.islandName {
-    
 }
 
 .publicService .hiddenForPublicService {

@@ -58,7 +58,7 @@ export class Factory extends FactoryRaw {
     Productivity: number = 100
     ChildLevel: number = 0
 
-    GetRequiredCount(populationLevels: PopulationLevel[]): number {
+    GetRequiredCount(allPopulationLevels: PopulationLevel[]): number {
         if (!this.Enabled) {
             return 0;
         }
@@ -67,8 +67,8 @@ export class Factory extends FactoryRaw {
         let outputProductID = this.Outputs[0].ProductID;
         let cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;
 
-        for (var i = 0; i < populationLevels.length; i++) {
-            amountRequiredPerMinute += populationLevels[i].GetProductRequirement(outputProductID);
+        for (var i = 0; i < allPopulationLevels.length; i++) {
+            amountRequiredPerMinute += allPopulationLevels[i].GetProductRequirement(outputProductID);
         }        
         
         // Requirements appear to be in tons per second, so multiply by 60
@@ -78,7 +78,7 @@ export class Factory extends FactoryRaw {
         if (this.ParentFactory) {
             let parentInput = this.ParentFactory.Inputs.filter(i => i.ProductID === outputProductID)[0];
             if (parentInput) {
-                let parentRequiredFactories = this.ParentFactory.GetRequiredCount(populationLevels);
+                let parentRequiredFactories = this.ParentFactory.GetRequiredCount(allPopulationLevels);
                 let parentCycleTime = this.ParentFactory.CycleTime > 0 ? this.ParentFactory.CycleTime : 30;                
                 let childParentFactoryRatio = parentInput.Amount / this.Outputs[0].Amount * cycleTime / parentCycleTime;
                 requiredFactoriesFromParent = parentRequiredFactories * childParentFactoryRatio;
@@ -87,7 +87,19 @@ export class Factory extends FactoryRaw {
         
         let producedPerMinute = this.Outputs[0].Amount * 60 / cycleTime;
 
-        return Math.round((amountRequiredPerMinute / producedPerMinute + requiredFactoriesFromParent) * 1000 * 100 / this.Productivity) / 1000;
+        return Math.round((amountRequiredPerMinute / producedPerMinute + requiredFactoriesFromParent) * 100 * 100 / this.Productivity) / 100;
+    }
+
+    IsInUse(allPopulationLevels: PopulationLevel[]) {
+        let relevantFactory = this as Factory;
+        while (relevantFactory.ParentFactory) {
+            relevantFactory = relevantFactory.ParentFactory;
+        }
+
+        return allPopulationLevels.filter(p => 
+            p.HouseCount > 0
+            && p.Inputs.filter(input => input.ProductID === relevantFactory.Outputs[0].ProductID).length > 0
+        ).length > 0;        
     }
 }
 
