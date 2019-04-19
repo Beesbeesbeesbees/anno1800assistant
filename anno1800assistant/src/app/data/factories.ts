@@ -90,6 +90,14 @@ export class Factory extends FactoryRaw {
         return Math.round((amountRequiredPerMinute / producedPerMinute + requiredFactoriesFromParent) * 100 * 100 / this.Productivity) / 100;
     }
 
+    GetSatisfactionClass(allPopulationLevels: PopulationLevel[]): string {
+        if (!this.Enabled) {
+            return '';
+        }
+
+        let required = this.GetRequiredCount(allPopulationLevels);
+    }
+
     IsInUse(allPopulationLevels: PopulationLevel[]) {
         let relevantFactory = this as Factory;
         while (relevantFactory.ParentFactory) {

@@ -12,12 +12,13 @@
     text-align: center;
 }
 
-.islandNameContainer {
+.islandNameContainer, .islandHeaderWrapper {
     text-align: center;    
 }
 
-.factories {
-    text-align: center;
+.islandHeader {
+    text-align: left;
+    display: inline-block;
 }
 
 input[type="number"] {
@@ -57,6 +58,11 @@ input[type="number"] {
     width: 50px;
 }
 
+.factories {
+    text-align: center;
+    display: inline-block;
+}
+
 .factories .factoryNameColumn {
     width: 180px;
     display: inline-block;
@@ -65,9 +71,35 @@ input[type="number"] {
 
 .factoryHeader {
     font-weight: bold;
-}
-.factoryHeader > * {
     text-align: center;
+    padding: 1px 2px 1px 9px;
+}
+
+.factoryColumn {
+    display: inline-block;    
+    vertical-align: top;
+}
+
+.factoryColumn:not(:last-child) {
+    margin-right: 10px;
+}
+
+.factory {
+    border-top: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    border-radius: 3px;
+    padding: 1px 1px 1px 8px;
+    background-color: white;
+}
+.factory:last-child {
+    border-bottom: 1px solid gray;
+}
+.factory.unsatisfied {
+    background-color: #FDA8AB;
+}
+.factory.satisfied {
+    background-color: #D5EF9F;
 }
 
 .productivityColumn {
@@ -99,5 +131,5 @@ input[type="number"] {
 }
 
 .publicService .hiddenForPublicService {
-    display: none;
+    visibility: hidden;
 }
