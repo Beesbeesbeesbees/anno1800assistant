@@ -15,14 +15,17 @@ export class AppComponent implements OnInit {
   ctrl_key_held: boolean = false;
 
   ngOnInit() {
-    this.reset();
-
-    
+    this.Reset();    
   }
-
-  reset() {    
-    this.islands = [new Island("First Island")];    
+  
+  Reset() {
+    this.islands = [];
+    this.AddIsland();
   }  
+
+  AddIsland() {
+    this.islands.push(new Island("Island " + (this.islands.length + 1)));
+  }
 
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: KeyboardEvent) {        

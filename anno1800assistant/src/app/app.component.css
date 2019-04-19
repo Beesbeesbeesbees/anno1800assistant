@@ -1,9 +1,13 @@
+.addIsland, .island {
+    margin: 5px 0px 5px 5px;
+    display: inline-block;
+    vertical-align: top;
+}
+
 .island {
     border: 1px solid gray;
     padding: 5px;
-    margin: 5px;
-    display: inline-block;
-    background-color: #FFDCAA;
+    background-color: #ffeec4;
 }
 
 .islandName {
