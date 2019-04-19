@@ -59,7 +59,12 @@ export class Factory extends FactoryRaw {
     ChildLevel: number = 0
     TradeBalance: number = 0
 
-    GetRequiredCount(allPopulationLevels: PopulationLevel[]): number {        
+    GetRequiredCount(allPopulationLevels: PopulationLevel[]): number {
+        if (this.Outputs[0].Amount === 0) {
+            // Public service building
+            return 0;
+        }
+
         let amountRequiredPerMinute = 0;
         let outputProductID = this.Outputs[0].ProductID;
         let cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;
@@ -88,17 +93,24 @@ export class Factory extends FactoryRaw {
     }
 
     GetSatisfactionClass(allPopulationLevels: PopulationLevel[]): string {
-        if (!this.Enabled) {
-            return 'factory';
-        }
-
-        let required = this.GetRequiredCount(allPopulationLevels);
-        let satisfaction = this.BuiltCount + this.TradeBalance;
         let result = 'factory';
 
         if (this.Outputs[0].Amount === 0) {
             result = result + ' publicService';
+
+            if (this.Enabled) {
+                result = result + ' satisfied';
+            }
+
+            return result;
         }
+        
+        if (!this.Enabled) {
+            return result;
+        }
+
+        let required = this.GetRequiredCount(allPopulationLevels);
+        let satisfaction = this.BuiltCount + this.TradeBalance;
 
         if(satisfaction > required) {
             result = result + ' satisfied';
