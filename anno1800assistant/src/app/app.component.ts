@@ -148,8 +148,23 @@ export class AppComponent implements OnInit {
     }
   }
 
-  promotionCount(): number {
+  PromotionCount(): number {
     return 1 * (this.ctrl_key_held ? 5 : 1) * (this.shift_key_held ? 10 : 1);
+  }
+
+  GetTradeBalance(factoryID: number): number {
+    let balance = 0;
+
+    for (var i = 0; i < this.islands.length; i++) {
+      let factory = this.islands[i].Factories.filter(f => f.ID === factoryID)[0];
+      balance += (factory.Productivity * factory.TradeBalance / 100);
+    }
+
+    return balance;
+  }
+
+  IsTradeBalanced(factoryID: number): boolean {
+    return Math.abs(this.GetTradeBalance(factoryID)) < 0.02;
   }
 }
 

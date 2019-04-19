@@ -165,6 +165,10 @@ input[type="number"] {
     visibility: hidden;
 }
 
+.unbalancedTrade {
+    background-color: #FDA8AB;
+}
+
 .bottomButton {
     margin-left: 5px;
 }
