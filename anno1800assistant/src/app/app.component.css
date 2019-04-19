@@ -25,14 +25,23 @@
     display: inline-block;
 }
 
+.populationGroup {
+    display: inline-block;
+}
+.populationGroup:not(:first-of-type) {
+    margin-left: 30px;
+}
+
 input[type="number"] {
     width: 80px;
     display: inline-block;
 }
 
 .popLabelColumn {
-    width: 90px;
+    width: 87px;
     display: inline-block;
+    text-align: right;
+    padding-right: 10px;
 }
 
 .houseCountColumn {
@@ -54,6 +63,10 @@ input[type="number"] {
 .houseCountColumn > .btn {
     margin-left: 5px;
 }
+.houseCountColumn:last-child {
+    width: 50px;
+}
+
 .addHouseButton {
     margin-right: 5px;
 }

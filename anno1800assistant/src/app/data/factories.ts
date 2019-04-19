@@ -97,16 +97,17 @@ export class Factory extends FactoryRaw {
         }
 
         let required = this.GetRequiredCount(allPopulationLevels);
+        let satisfaction = this.BuiltCount + this.TradeBalance;
         let result = 'factory';
 
         if (this.Outputs[0].Amount === 0) {
             result = result + ' publicService';
         }
 
-        if(this.BuiltCount > required) {
+        if(satisfaction > required) {
             result = result + ' satisfied';
         }
-        else if (required - this.BuiltCount < 0.8) {
+        else if (required - satisfaction < 0.5) {
             result = result + ' slightlyUnsatisfied';
         }
         else {
