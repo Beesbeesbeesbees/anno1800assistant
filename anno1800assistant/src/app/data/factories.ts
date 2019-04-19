@@ -57,6 +57,7 @@ export class Factory extends FactoryRaw {
     BuiltCount: number = 0
     Productivity: number = 100
     ChildLevel: number = 0
+    TradeBalance: number = 0
 
     GetRequiredCount(allPopulationLevels: PopulationLevel[]): number {
         if (!this.Enabled) {
@@ -132,7 +133,8 @@ export class Factory extends FactoryRaw {
             FactoryID: this.ID,
             Enabled: this.Enabled,
             BuiltCount: this.BuiltCount,
-            Productivity: this.Productivity
+            Productivity: this.Productivity,
+            TradeBalance: this.TradeBalance
         };
     }
 }
@@ -147,4 +149,5 @@ export class FactorySaveInfo {
     Enabled: boolean
     BuiltCount: number
     Productivity: number
+    TradeBalance: number
 }

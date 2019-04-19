@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
     }
 
     try {      
-      let saveObject = JSON.parse(saveData) as IslandSaveInfo[];
+      let saveObject = JSON.parse(saveData) as SaveData;
       this.LoadData(saveObject);      
     }
     catch {
@@ -75,14 +75,16 @@ export class AppComponent implements OnInit {
     var reader = new FileReader();
 
     reader.onload = function(onLoadEvent: any) {
-      let data = JSON.parse(onLoadEvent.target.result) as IslandSaveInfo[];
+      let data = JSON.parse(onLoadEvent.target.result) as SaveData;
       self.LoadData(data);
+      self.autosave_throttle = null;
+      self.Autosave();
     }
   
     reader.readAsText(event.target.files[0]);
   }
 
-  GenerateSaveData(): IslandSaveInfo[] {
+  GenerateSaveData(): SaveData {
     let save: IslandSaveInfo[] = [];
     for (var i = 0; i < this.islands.length; i++) {
       let island = this.islands[i];
@@ -100,7 +102,8 @@ export class AppComponent implements OnInit {
           FactoryID: island.Factories[fact].ID,
           BuiltCount: island.Factories[fact].BuiltCount,
           Productivity: island.Factories[fact].Productivity,
-          Enabled: island.Factories[fact].Enabled
+          Enabled: island.Factories[fact].Enabled,
+          TradeBalance: island.Factories[fact].TradeBalance
         });
       }
 
@@ -111,13 +114,13 @@ export class AppComponent implements OnInit {
       });
     }
 
-    return save;
+    return { Islands: save };
   }
 
-  LoadData(data: IslandSaveInfo[]) {
+  LoadData(data: SaveData) {
     this.islands = [];      
-    for (var i = 0; i < data.length; i++) {
-      this.islands.push(new Island(data[i].Name, data[i]));
+    for (var i = 0; i < data.Islands.length; i++) {
+      this.islands.push(new Island(data.Islands[i].Name, data.Islands[i]));
     }
   }
 
@@ -148,6 +151,10 @@ export class AppComponent implements OnInit {
   promotionCount(): number {
     return 1 * (this.ctrl_key_held ? 5 : 1) * (this.shift_key_held ? 10 : 1);
   }
+}
+
+export class SaveData {
+  Islands: IslandSaveInfo[]
 }
 
 export class IslandSaveInfo {
@@ -233,6 +240,7 @@ export class Island {
         factory.Enabled = savedFactoryInfo.Enabled;
         factory.BuiltCount = savedFactoryInfo.BuiltCount;
         factory.Productivity = savedFactoryInfo.Productivity;
+        factory.TradeBalance = savedFactoryInfo.TradeBalance;
       }
     }
 
@@ -258,6 +266,7 @@ export class Island {
             newFactory.Enabled = savedFactoryInfo.Enabled;
             newFactory.BuiltCount = savedFactoryInfo.BuiltCount;
             newFactory.Productivity = savedFactoryInfo.Productivity;
+            newFactory.TradeBalance = savedFactoryInfo.TradeBalance;
           }
         }
 

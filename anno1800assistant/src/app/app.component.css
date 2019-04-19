@@ -65,6 +65,7 @@ input[type="number"] {
 .factories {
     text-align: center;
     display: inline-block;
+    line-height: 1;
 }
 
 .factories .factoryNameColumn {
@@ -77,6 +78,11 @@ input[type="number"] {
     font-weight: bold;
     text-align: center;
     padding: 1px 2px 1px 9px;
+}
+
+.factories input[type="number"] {
+    padding: 1px 5px;
+    height: initial;
 }
 
 .factoryColumn {
@@ -93,7 +99,7 @@ input[type="number"] {
     border-left: 1px solid gray;
     border-right: 1px solid gray;
     border-radius: 3px;
-    padding: 1px 1px 1px 8px;
+    padding: 1px 1px 0px 8px;
     background-color: white;
 }
 .factory:last-child {
@@ -128,7 +134,12 @@ input[type="number"] {
 }
 
 .builtColumn {
-    width: 80px;
+    width: 85px;
+    display: inline-block;
+}
+
+.tradeColumn {
+    width: 85px;
     display: inline-block;
 }
 

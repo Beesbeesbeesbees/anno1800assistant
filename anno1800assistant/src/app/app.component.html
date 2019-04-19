@@ -76,6 +76,7 @@
         <span class="productivityColumn">Productivity</span>
         <span class="requiredColumn">Required</span>
         <span class="builtColumn">Built</span>
+        <span class="tradeColumn">Trade</span>
       </div>
       <div *ngFor="let factory of island.GetColumnLayouts()[i]" [className]="factory.GetSatisfactionClass(island.PopulationLevels)">
         <label>
@@ -99,6 +100,9 @@
         </span>
         <span class="builtColumn">
           <input class="hiddenForPublicService form-control" type="number" [(ngModel)]="factory.BuiltCount" [disabled]="!factory.Enabled" />
+        </span>
+        <span class="builtColumn">
+          <input class="hiddenForPublicService form-control" type="number" [(ngModel)]="factory.TradeCount" [disabled]="!factory.Enabled" />
         </span>
       </div>
     </span>
