@@ -59,11 +59,7 @@ export class Factory extends FactoryRaw {
     ChildLevel: number = 0
     TradeBalance: number = 0
 
-    GetRequiredCount(allPopulationLevels: PopulationLevel[]): number {
-        if (!this.Enabled) {
-            return 0;
-        }
-
+    GetRequiredCount(allPopulationLevels: PopulationLevel[]): number {        
         let amountRequiredPerMinute = 0;
         let outputProductID = this.Outputs[0].ProductID;
         let cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;
