@@ -77,11 +77,7 @@
         <span class="requiredColumn">Required</span>
         <span class="builtColumn">Built</span>
       </div>
-      <div *ngFor="let factory of island.GetColumnLayouts()[i]" 
-        [className]="(factory.Outputs[0].Amount === 0 ? 'publicService ' : '')
-          + (factory.Enabled ? (factory.GetRequiredCount(island.PopulationLevels, island.Factories) > factory.BuiltCount ? 'unsatisfied ' : 'satisfied ') : '')
-          + 'factory'"
-      >
+      <div *ngFor="let factory of island.GetColumnLayouts()[i]" [className]="factory.GetSatisfactionClass(island.PopulationLevels)">
         <label>
           <span class="factoryNameColumn">        
             <span *ngIf="factory.ParentFactory" class="indent"></span>
@@ -111,4 +107,9 @@
 <span class="btn btn-primary addIsland" (click)="AddIsland()">
   <span class="fa fa-plus"></span>
   <span> Add Island</span>
+</span>
+<br />
+<span class="btn btn-primary addIsland" (click)="Reset()">
+  <span class="fa fa-repeat"></span>
+  <span> Reset</span>
 </span>

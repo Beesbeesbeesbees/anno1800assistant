@@ -91,6 +91,12 @@ export class PopulationLevel extends PopulationLevelRaw {
 
         return 0;
     }
+
+    Save(): PopulationLevelSaveInfo {
+        return {
+            HouseCount: this.HouseCount
+        };
+    }
 }
 
 export class PopulationInput {
@@ -98,4 +104,8 @@ export class PopulationInput {
     Amount: number
     SupplyWeight: number
     MoneyValue: number
+}
+
+export class PopulationLevelSaveInfo {
+    HouseCount: number
 }

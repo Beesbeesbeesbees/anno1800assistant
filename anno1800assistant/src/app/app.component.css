@@ -105,6 +105,9 @@ input[type="number"] {
 .factory.satisfied {
     background-color: #D5EF9F;
 }
+.factory.slightlyUnsatisfied {
+    background-color: #fff26d;
+}
 
 .productivityColumn {
     width: 100px;

@@ -92,10 +92,27 @@ export class Factory extends FactoryRaw {
 
     GetSatisfactionClass(allPopulationLevels: PopulationLevel[]): string {
         if (!this.Enabled) {
-            return '';
+            return 'factory';
         }
 
         let required = this.GetRequiredCount(allPopulationLevels);
+        let result = 'factory';
+
+        if (this.Outputs[0].Amount === 0) {
+            result = result + ' publicService';
+        }
+
+        if(this.BuiltCount > required) {
+            result = result + ' satisfied';
+        }
+        else if (required - this.BuiltCount < 0.8) {
+            result = result + ' slightlyUnsatisfied';
+        }
+        else {
+            result = result + ' unsatisfied';
+        }
+
+        return result;
     }
 
     IsInUse(allPopulationLevels: PopulationLevel[]) {
@@ -109,9 +126,25 @@ export class Factory extends FactoryRaw {
             && p.Inputs.filter(input => input.ProductID === relevantFactory.Outputs[0].ProductID).length > 0
         ).length > 0;        
     }
+
+    Save(): FactorySaveInfo {
+        return {
+            FactoryID: this.ID,
+            Enabled: this.Enabled,
+            BuiltCount: this.BuiltCount,
+            Productivity: this.Productivity
+        };
+    }
 }
 
 export class FactoryIngredient {
     ProductID: number
     Amount: number
+}
+
+export class FactorySaveInfo {
+    FactoryID: number
+    Enabled: boolean
+    BuiltCount: number
+    Productivity: number
 }
