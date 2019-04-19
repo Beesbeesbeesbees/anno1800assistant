@@ -1,3 +1,5 @@
+# [Launch Anno 1800 Assistant In-Browser](https://beesbeesbeesbees.github.io/anno1800assistant/)
+
 # anno1800assistant
 Anno 1800 Assistant is a tool to compute consumption and production rates of consumer goods in Anno 1800. It is designed to aid with tracking population and building counts in moment-to-moment gameplay. At a glance the user should be able to see what effect building or promoting residences will have in their goods consumption and when new production chains will be required. It also allows modeling of multiple islands at once and trade interactions between them.
 
