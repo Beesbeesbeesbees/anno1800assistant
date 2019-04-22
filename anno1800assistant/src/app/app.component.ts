@@ -268,9 +268,15 @@ export class Island {
 
   ProcessChildFactories(factory: Factory, group: Factory[], saveInfo: IslandSaveInfo) {
     for (var i = 0; i < factory.Inputs.length; i++) {
-      let childFactory = new Factories().AllFactories.filter(f => 
+      let childFactories = new Factories().AllFactories.filter(f => 
         f.Outputs.filter(output => output.ProductID === factory.Inputs[i].ProductID).length > 0
-      )[0];
+      );
+
+      // Accounting for new world variants of factories
+      let childFactory = childFactories[0];
+      if (childFactories.length > 1) {
+        childFactory = childFactories.filter(f => f.IsNewWorld === factory.IsNewWorld && f.IsOldWorld === factory.IsOldWorld)[0];
+      }
 
       if (childFactory) {
         let newFactory = new Factory(childFactory);

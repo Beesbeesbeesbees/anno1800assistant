@@ -19,6 +19,7 @@ namespace AnnoXMLParser {
             List<XElement> factoryXMLs = new List<XElement>();
             List<XElement> productXMLs = new List<XElement>();
             List<XElement> populationXMLs = new List<XElement>();
+            List<XElement> newWorldVariants = new List<XElement>();
 
             while (queue.Any()) {
                 var element = queue.Pop();
@@ -33,6 +34,10 @@ namespace AnnoXMLParser {
 
                 if (element.Name == "Template" && element.Value == "PopulationLevel7") {
                     populationXMLs.Add(element.Parent);
+                }
+
+                if (element.Name == "BaseAssetGUID") {
+                    newWorldVariants.Add(element.Parent);
                 }
 
                 foreach (var add in element.Elements()) {
@@ -130,9 +135,24 @@ namespace AnnoXMLParser {
 
                         outputs.Add(new FactoryIngredient() { ProductID = productID, Amount = amount });
                     }
+                }                
+                
+                var factory = new Factory() { ID = id, Name = name, CycleTime = cycleTime, Inputs = inputs.ToArray(), Outputs = outputs.ToArray() };
+
+                string associatedRegions = factoryXML.Elements()
+                    ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
+                    ?.SingleOrDefault(x => x.Name == "Building")?.Elements()
+                    ?.SingleOrDefault(x => x.Name == "AssociatedRegions")?.Value ?? "";
+
+                if (associatedRegions.IndexOf("Moderate", StringComparison.OrdinalIgnoreCase) >= 0) {
+                    factory.IsOldWorld = true;
                 }
 
-                factories.Add(new Factory() { ID = id, Name = name, CycleTime = cycleTime, Inputs = inputs.ToArray(), Outputs = outputs.ToArray() });
+                if (associatedRegions.IndexOf("Colony01", StringComparison.OrdinalIgnoreCase) >= 0) {
+                    factory.IsNewWorld = true;
+                }
+
+                factories.Add(factory);
             }
 
             var populationLevels = new List<PopulationLevel>();
@@ -181,6 +201,46 @@ namespace AnnoXMLParser {
                 populationLevels.Add(new PopulationLevel() { Name = name, Inputs = inputs.ToArray() });
             }
 
+            foreach (var variantXML in newWorldVariants) {
+                string baseIDString = variantXML.Elements()
+                    .Single(x => x.Name == "BaseAssetGUID").Value;
+
+                if (!int.TryParse(baseIDString, out int baseID)) {
+                    continue;
+                }
+
+                var baseFactory = factories.SingleOrDefault(x => x.ID == baseID);
+                if (baseFactory == null) {
+                    continue;
+                }
+
+                int newID = int.Parse(variantXML.Elements()
+                    .Single(x => x.Name == "Values").Elements()
+                    .Single(x => x.Name == "Standard").Elements()
+                    .Single(x => x.Name == "GUID").Value);
+
+                var newFactory = new Factory() {
+                    ID = newID,
+                    Name = baseFactory.Name,
+                    CycleTime = baseFactory.CycleTime,
+                    Inputs = baseFactory.Inputs,
+                    Outputs = baseFactory.Outputs,
+                    IsNewWorld = true,
+                    IsOldWorld = false
+                };
+
+                string newCycleTimeString = variantXML.Elements()
+                    ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
+                    ?.SingleOrDefault(x => x.Name == "FactoryBase")?.Elements()
+                    ?.SingleOrDefault(x => x.Name == "CycleTime")?.Value;
+
+                if (!string.IsNullOrEmpty(newCycleTimeString) && int.TryParse(newCycleTimeString, out int newCycleTime)) {
+                    newFactory.CycleTime = newCycleTime;
+                }
+
+                factories.Add(newFactory);
+            }
+
             var productsJSON = JsonConvert.SerializeObject(products.ToArray());
             File.WriteAllText(outputFolder + "products.json", productsJSON);
 
@@ -203,6 +263,8 @@ namespace AnnoXMLParser {
         public int CycleTime { get; set; }
         public FactoryIngredient[] Inputs { get; set; }
         public FactoryIngredient[] Outputs { get; set; }
+        public bool IsOldWorld { get; set; }
+        public bool IsNewWorld { get; set; }
     }
 
     public class FactoryIngredient {
