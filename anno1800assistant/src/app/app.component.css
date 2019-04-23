@@ -44,6 +44,16 @@ input[type="number"] {
     padding-right: 10px;
 }
 
+.showUnusedToggle {    
+    position: absolute;
+    bottom: 0px;
+    right: -10px;
+}
+.showUnusedToggle, .showUnusedToggle * {
+    cursor: pointer;
+    z-index: 999999999;
+}
+
 .houseCountColumn {
     width: 140px;
     display: inline-block;
@@ -52,6 +62,7 @@ input[type="number"] {
     text-align: right;
     padding-right: 15px;
     font-weight: bold;
+    position: relative;
 }
 .houseCountColumn.populationCount {    
     padding-left: 68px;
@@ -82,7 +93,7 @@ input[type="number"] {
 }
 
 .factories .factoryNameColumn {
-    width: 180px;
+    width: 200px;
     display: inline-block;
     text-align: left;
 }

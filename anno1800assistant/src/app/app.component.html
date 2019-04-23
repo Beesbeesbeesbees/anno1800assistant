@@ -9,7 +9,11 @@
         <!-- Population and Dwellings - Old World -->
         <span class="popLabelColumn"></span>
         <span *ngFor="let i of [0, 1, 2, 3, 4]" class="houseCountColumn header">
-          {{ island.PopulationLevels[i].Name }}
+          <span>{{ island.PopulationLevels[i].Name }}</span>
+          <span *ngIf="island.PopulationLevels[i].HouseCount <= 0" class="showUnusedToggle">
+            <span *ngIf="island.PopulationLevels[i].ShowUnused" class="fa fa-eye-slash" (click)="island.PopulationLevels[i].ToggleShowUnused()"></span>
+            <span *ngIf="!island.PopulationLevels[i].ShowUnused" class="fa fa-eye" (click)="island.PopulationLevels[i].ToggleShowUnused()"></span>
+          </span>
         </span>
         <br />
       
@@ -43,7 +47,11 @@
       <span  class="populationGroup">      
         <!-- Population and Dwellings - New World -->  
         <span *ngFor="let i of [5, 6]" class="houseCountColumn header">
-          {{ island.PopulationLevels[i].Name }}
+          <span>{{ island.PopulationLevels[i].Name }}</span>
+          <span *ngIf="island.PopulationLevels[i].HouseCount <= 0" class="showUnusedToggle">
+            <span *ngIf="island.PopulationLevels[i].ShowUnused" class="fa fa-eye-slash" (click)="island.PopulationLevels[i].ToggleShowUnused()"></span>
+            <span *ngIf="!island.PopulationLevels[i].ShowUnused" class="fa fa-eye" (click)="island.PopulationLevels[i].ToggleShowUnused()"></span>
+          </span>
         </span>
         <br />
       

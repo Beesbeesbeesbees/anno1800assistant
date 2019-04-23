@@ -129,15 +129,15 @@ export class Factory extends FactoryRaw {
         return result;
     }
 
-    IsInUse(allPopulationLevels: PopulationLevel[]) {
+    IsInUse(allPopulationLevels: PopulationLevel[]) {        
         let relevantFactory = this as Factory;
         while (relevantFactory.ParentFactory) {
             relevantFactory = relevantFactory.ParentFactory;
         }
 
         return allPopulationLevels.filter(p => 
-            p.HouseCount > 0
-            && p.Inputs.filter(input => input.ProductID === relevantFactory.Outputs[0].ProductID).length > 0
+            p.Inputs.filter(input => input.ProductID === relevantFactory.Outputs[0].ProductID).length > 0
+            && (p.HouseCount > 0 || p.ShowUnused)            
         ).length > 0;        
     }
 

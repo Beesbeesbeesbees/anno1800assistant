@@ -93,7 +93,8 @@ export class AppComponent implements OnInit {
 
       for (var pop = 0; pop < island.PopulationLevels.length; pop++) {
         populationLevels.push({
-          HouseCount: island.PopulationLevels[pop].HouseCount
+          HouseCount: island.PopulationLevels[pop].HouseCount,
+          ShowUnused: island.PopulationLevels[pop].ShowUnused
         });
       }
 
@@ -191,6 +192,7 @@ export class Island {
     if (saveInfo) {      
       for (var i = 0; i < saveInfo.PopulationLevels.length; i++) {
         this.PopulationLevels[i].HouseCount = saveInfo.PopulationLevels[i].HouseCount;
+        this.PopulationLevels[i].ShowUnused = saveInfo.PopulationLevels[i].ShowUnused;
       }
     }
 

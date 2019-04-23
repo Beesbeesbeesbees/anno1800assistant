@@ -45,6 +45,7 @@ export class PopulationLevel extends PopulationLevelRaw {
 
     HouseCount: number = 0    
     PromotionTarget: PopulationLevel
+    ShowUnused: boolean
     
     GetPopulation(factories: Factory[]): number {
         let supplyWeight = 5;
@@ -79,6 +80,10 @@ export class PopulationLevel extends PopulationLevelRaw {
         this.PromotionTarget.HouseCount += promotionCount;
     }
 
+    ToggleShowUnused(): void {
+        this.ShowUnused = !this.ShowUnused;
+    }
+
     AddHouses(houseCount: number): void {
         this.HouseCount += houseCount;
     }
@@ -94,7 +99,8 @@ export class PopulationLevel extends PopulationLevelRaw {
 
     Save(): PopulationLevelSaveInfo {
         return {
-            HouseCount: this.HouseCount
+            HouseCount: this.HouseCount,
+            ShowUnused: this.ShowUnused
         };
     }
 }
@@ -108,4 +114,5 @@ export class PopulationInput {
 
 export class PopulationLevelSaveInfo {
     HouseCount: number
+    ShowUnused: boolean
 }
