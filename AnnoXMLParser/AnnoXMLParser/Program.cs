@@ -24,7 +24,14 @@ namespace AnnoXMLParser {
             while (queue.Any()) {
                 var element = queue.Pop();
 
-                if (element.Name == "Template" && (element.Value == "FactoryBuilding7" || element.Value == "FarmBuilding" || element.Value == "HeavyFactoryBuilding" || element.Value == "PublicServiceBuilding" || element.Value == "SlotFactoryBuilding7")) {
+                if (element.Name == "Template" && (
+                    element.Value == "FactoryBuilding7"
+                        || element.Value == "FarmBuilding"
+                        || element.Value == "HeavyFactoryBuilding"
+                        || element.Value == "PublicServiceBuilding"
+                        || element.Value == "SlotFactoryBuilding7"
+                        || element.Value == "FreeAreaBuilding"
+                )) {
                     factoryXMLs.Add(element.Parent);
                 }
 
