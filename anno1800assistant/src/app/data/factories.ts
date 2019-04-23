@@ -45,6 +45,14 @@ export class Factory extends FactoryRaw {
 
     ChildFactories: Factory[] = []
     ParentFactory?: Factory = null
+
+    get ParentFactoryOrThisRecursive(): Factory {
+        if (!this.ParentFactory) {
+            return this;
+        }
+
+        return this.ParentFactory.ParentFactoryOrThisRecursive;
+    }
     
     _enabled: boolean = false
     get Enabled(): boolean {
@@ -144,6 +152,7 @@ export class Factory extends FactoryRaw {
     Save(): FactorySaveInfo {
         return {
             FactoryID: this.ID,
+            ParentFactoryID: this.ParentFactory ? this.ParentFactory.ID : null,
             Enabled: this.Enabled,
             BuiltCount: this.BuiltCount,
             Productivity: this.Productivity,
@@ -159,6 +168,7 @@ export class FactoryIngredient {
 
 export class FactorySaveInfo {
     FactoryID: number
+    ParentFactoryID?: number
     Enabled: boolean
     BuiltCount: number
     Productivity: number

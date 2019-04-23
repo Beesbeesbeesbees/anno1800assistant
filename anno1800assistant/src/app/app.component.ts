@@ -99,12 +99,14 @@ export class AppComponent implements OnInit {
       }
 
       for (var fact = 0; fact < island.Factories.length; fact++) {
+        let factory = island.Factories[fact];
         factories.push({
-          FactoryID: island.Factories[fact].ID,
-          BuiltCount: island.Factories[fact].BuiltCount,
-          Productivity: island.Factories[fact].Productivity,
-          Enabled: island.Factories[fact].Enabled,
-          TradeBalance: island.Factories[fact].TradeBalance
+          FactoryID: factory.ID,
+          ParentFactoryID: factory.ParentFactoryOrThisRecursive.ID,
+          BuiltCount: factory.BuiltCount,
+          Productivity: factory.Productivity,
+          Enabled: factory.Enabled,
+          TradeBalance: factory.TradeBalance
         });
       }
 
@@ -252,7 +254,18 @@ export class Island {
     let factory = new Factory(new Factories().AllFactories.filter(f => f.ID === factoryID)[0]);
 
     if (saveInfo) {
-      let savedFactoryInfo = saveInfo.Factories.filter(f => f.FactoryID === factory.ID)[0];
+      let savedFactoryInfos = saveInfo.Factories.filter(f => f.FactoryID === factory.ID);
+      let savedFactoryInfo = savedFactoryInfos[0];
+
+      if (savedFactoryInfos.length > 1) {
+        let matchingSavedFactoryInfo = savedFactoryInfos.filter(f => f.ParentFactoryID === factory.ParentFactoryOrThisRecursive.ID)[0];
+        
+        // Doing a check here to make sure we matched to be backwards-compatible with old saves. This can eventually be removed.
+        if (matchingSavedFactoryInfo) {
+          savedFactoryInfo = matchingSavedFactoryInfo;
+        }
+      }          
+
       if (savedFactoryInfo) {
         factory.Enabled = savedFactoryInfo.Enabled;
         factory.BuiltCount = savedFactoryInfo.BuiltCount;
@@ -268,23 +281,34 @@ export class Island {
   }
 
 
-  ProcessChildFactories(factory: Factory, group: Factory[], saveInfo: IslandSaveInfo) {
-    for (var i = 0; i < factory.Inputs.length; i++) {
-      let childFactories = new Factories().AllFactories.filter(f => 
-        f.Outputs.filter(output => output.ProductID === factory.Inputs[i].ProductID).length > 0
+  ProcessChildFactories(parentFactory: Factory, group: Factory[], saveInfo: IslandSaveInfo) {
+    for (var i = 0; i < parentFactory.Inputs.length; i++) {
+      let matchedRawFactories = new Factories().AllFactories.filter(f => 
+        f.Outputs.filter(output => output.ProductID === parentFactory.Inputs[i].ProductID).length > 0
       );
 
       // Accounting for new world variants of factories
-      let childFactory = childFactories[0];
-      if (childFactories.length > 1) {
-        childFactory = childFactories.filter(f => f.IsNewWorld === factory.IsNewWorld && f.IsOldWorld === factory.IsOldWorld)[0];
+      let matchedRawFactory = matchedRawFactories[0];
+      if (matchedRawFactories.length > 1) {
+        matchedRawFactory = matchedRawFactories.filter(f => f.IsNewWorld === parentFactory.IsNewWorld && f.IsOldWorld === parentFactory.IsOldWorld)[0];
       }
 
-      if (childFactory) {
-        let newFactory = new Factory(childFactory);
+      if (matchedRawFactory) {
+        let newFactory = new Factory(matchedRawFactory);
 
         if (saveInfo) {
-          let savedFactoryInfo = saveInfo.Factories.filter(f => f.FactoryID === newFactory.ID)[0];
+          let savedFactoryInfos = saveInfo.Factories.filter(f => f.FactoryID === newFactory.ID);
+          let savedFactoryInfo = savedFactoryInfos[0];
+
+          if (savedFactoryInfos.length > 1) {
+            let matchingSavedFactoryInfo = savedFactoryInfos.filter(f => f.ParentFactoryID === parentFactory.ParentFactoryOrThisRecursive.ID)[0];
+            
+            // Doing a check here to make sure we matched to be backwards-compatible with old saves. This can eventually be removed.
+            if (matchingSavedFactoryInfo) {
+              savedFactoryInfo = matchingSavedFactoryInfo;
+            }
+          }          
+
           if (savedFactoryInfo) {
             newFactory.Enabled = savedFactoryInfo.Enabled;
             newFactory.BuiltCount = savedFactoryInfo.BuiltCount;
@@ -293,8 +317,8 @@ export class Island {
           }
         }
 
-        factory.ChildFactories.push(newFactory);
-        newFactory.ParentFactory = factory;
+        parentFactory.ChildFactories.push(newFactory);
+        newFactory.ParentFactory = parentFactory;
         this.Factories.push(newFactory);
         group.push(newFactory);
         this.ProcessChildFactories(newFactory, group, saveInfo);
