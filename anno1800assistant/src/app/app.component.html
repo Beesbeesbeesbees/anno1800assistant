@@ -1,11 +1,23 @@
-<span *ngFor="let island of islands" class="island">
+<span *ngFor="let island of islands; index as i" class="island">
   <div class="islandHeaderWrapper">
+    <span class="pull-right buttonTray">
+      <button type="button" class="btn btn-primary btn-sm" [disabled]="i === 0" (click)="MoveIslandUp(i)">
+        <span class="fa fa-arrow-up"></span>
+      </button> 
+      <button type="button" class="btn btn-primary btn-sm" [disabled]="i === (islands.length - 1)" (click)="MoveIslandDown(i)">
+          <span class="fa fa-arrow-down"></span>
+      </button>
+      <button type="button" class="btn btn-primary btn-sm" (click)="island.ToggleMinimized()">
+        <span [className]="'fa ' + (island.IsMinimized ? 'fa-window-maximize' : 'fa-window-minimize')"></span>
+      </button>
+    </span>
+    
     <span class="islandHeader">
       <div class="islandNameContainer">
         <input class="islandName form-control" type="text" [(ngModel)]="island.Name" />
       </div>  
     
-      <span class="populationGroup">        
+      <span class="populationGroup" *ngIf="!island.IsMinimized">        
         <!-- Population and Dwellings - Old World -->
         <span class="popLabelColumn"></span>
         <span *ngFor="let i of [0, 1, 2, 3, 4]" class="houseCountColumn header">
@@ -44,7 +56,7 @@
         </span>
       </span>
     
-      <span  class="populationGroup">      
+      <span class="populationGroup" *ngIf="!island.IsMinimized">      
         <!-- Population and Dwellings - New World -->  
         <span *ngFor="let i of [5, 6]" class="houseCountColumn header">
           <span>{{ island.PopulationLevels[i].Name }}</span>
@@ -85,7 +97,7 @@
 
 
   <!-- Factories -->
-  <div class="factories">
+  <div class="factories" *ngIf="!island.IsMinimized">
     <span *ngFor="let i of [0, 1]" class="factoryColumn">
       <div class="factoryHeader" [style.visibility]="island.EnabledFactoryGroups().length === 0 ? 'hidden' : ''">
         <span class="factoryNameColumn"></span>

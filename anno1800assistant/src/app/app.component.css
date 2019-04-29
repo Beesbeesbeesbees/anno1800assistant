@@ -4,6 +4,10 @@
     vertical-align: top;
 }
 
+.buttonTray > * {
+    margin-left: 4px;
+}
+
 .island {
     border: 1px solid gray;
     padding: 5px;

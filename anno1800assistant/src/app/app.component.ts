@@ -46,6 +46,18 @@ export class AppComponent implements OnInit {
     this.islands.push(new Island("Island " + (this.islands.length + 1)));
   }
 
+  MoveIslandUp(index: number) {
+    let island = this.islands[index];
+    this.islands.splice(index, 1);
+    this.islands.splice(index - 1, 0, island);
+  }
+
+  MoveIslandDown(index: number) {
+    let island = this.islands[index];
+    this.islands.splice(index, 1);
+    this.islands.splice(index + 1, 0, island);
+  }
+
   Autosave() {
     if (this.autosave_throttle && new Date() < this.autosave_throttle) {
       return;
@@ -113,7 +125,8 @@ export class AppComponent implements OnInit {
       save.push({
         Name: island.Name,
         PopulationLevels: populationLevels,
-        Factories: factories
+        Factories: factories,
+        IsMinimized: island.IsMinimized
       });
     }
 
@@ -179,6 +192,7 @@ export class IslandSaveInfo {
   Name: string
   PopulationLevels: PopulationLevelSaveInfo[]
   Factories: FactorySaveInfo[]
+  IsMinimized: boolean
 }
 
 export class Island {
@@ -186,9 +200,15 @@ export class Island {
   PopulationLevels: PopulationLevel[]
   Factories: Factory[]
   FactoryGroups: Factory[][]
+  IsMinimized: boolean
+
+  ToggleMinimized() {
+    this.IsMinimized = !this.IsMinimized;
+  }
 
   constructor(name: string, saveInfo?: IslandSaveInfo) {
     this.Name = name;
+    this.IsMinimized = false;
 
     this.PopulationLevels = new PopulationLevelsFactory().GetPopulationLevels();
     if (saveInfo) {      
@@ -196,6 +216,7 @@ export class Island {
         this.PopulationLevels[i].HouseCount = saveInfo.PopulationLevels[i].HouseCount;
         this.PopulationLevels[i].ShowUnused = saveInfo.PopulationLevels[i].ShowUnused;
       }
+      this.IsMinimized = saveInfo.IsMinimized;
     }
 
     this.Factories = [];
