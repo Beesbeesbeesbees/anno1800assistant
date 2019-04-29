@@ -10,13 +10,14 @@ import { Factory, Factories, FactorySaveInfo } from './data/factories';
 export class AppComponent implements OnInit {
   constructor() { }
 
-  islands: Island[]
-  shift_key_held: boolean = false;
-  ctrl_key_held: boolean = false;
-  autosave_throttle: Date;
+  Islands: Island[]
+  Shift_key_held: boolean = false;
+  Ctrl_key_held: boolean = false;
+  Autosave_throttle: Date;
+  FocusedFactoryID: number;
 
   ngOnInit() {
-    this.autosave_throttle = new Date(new Date().getTime() + 100)
+    this.Autosave_throttle = new Date(new Date().getTime() + 100)
     let saveData = window.localStorage.getItem('anno1800assistantsave');
     
     if (!saveData) {
@@ -38,33 +39,41 @@ export class AppComponent implements OnInit {
   }
   
   Reset() {
-    this.islands = [];
+    this.Islands = [];
     this.AddIsland();
   }  
 
   AddIsland() {
-    this.islands.push(new Island("Island " + (this.islands.length + 1)));
+    this.Islands.push(new Island("Island " + (this.Islands.length + 1)));
   }
 
   MoveIslandUp(index: number) {
-    let island = this.islands[index];
-    this.islands.splice(index, 1);
-    this.islands.splice(index - 1, 0, island);
+    let island = this.Islands[index];
+    this.Islands.splice(index, 1);
+    this.Islands.splice(index - 1, 0, island);
   }
 
   MoveIslandDown(index: number) {
-    let island = this.islands[index];
-    this.islands.splice(index, 1);
-    this.islands.splice(index + 1, 0, island);
+    let island = this.Islands[index];
+    this.Islands.splice(index, 1);
+    this.Islands.splice(index + 1, 0, island);
+  }
+
+  SetFocusedFactoryID(factoryID: number) {
+    this.FocusedFactoryID = factoryID;
+  }
+
+  ClearFocusedFactoryID() {
+    this.FocusedFactoryID = null;
   }
 
   Autosave() {
-    if (this.autosave_throttle && new Date() < this.autosave_throttle) {
+    if (this.Autosave_throttle && new Date() < this.Autosave_throttle) {
       return;
     }
 
     window.localStorage.setItem('anno1800assistantsave', JSON.stringify(this.GenerateSaveData()));
-    this.autosave_throttle = new Date(new Date().getTime() + 100)
+    this.Autosave_throttle = new Date(new Date().getTime() + 100)
   }
 
   ManualSave() {  
@@ -89,7 +98,7 @@ export class AppComponent implements OnInit {
     reader.onload = function(onLoadEvent: any) {
       let data = JSON.parse(onLoadEvent.target.result) as SaveData;
       self.LoadData(data);
-      self.autosave_throttle = null;
+      self.Autosave_throttle = null;
       self.Autosave();
     }
   
@@ -98,8 +107,8 @@ export class AppComponent implements OnInit {
 
   GenerateSaveData(): SaveData {
     let save: IslandSaveInfo[] = [];
-    for (var i = 0; i < this.islands.length; i++) {
-      let island = this.islands[i];
+    for (var i = 0; i < this.Islands.length; i++) {
+      let island = this.Islands[i];
       let populationLevels: PopulationLevelSaveInfo[] = [];
       let factories: FactorySaveInfo[] = [];
 
@@ -134,9 +143,9 @@ export class AppComponent implements OnInit {
   }
 
   LoadData(data: SaveData) {
-    this.islands = [];      
+    this.Islands = [];      
     for (var i = 0; i < data.Islands.length; i++) {
-      this.islands.push(new Island(data.Islands[i].Name, data.Islands[i]));
+      this.Islands.push(new Island(data.Islands[i].Name, data.Islands[i]));
     }
   }
 
@@ -145,34 +154,34 @@ export class AppComponent implements OnInit {
   @HostListener('window:keydown', ['$event'])
   keyDownEvent(event: KeyboardEvent) {        
     if (event.keyCode === 16) {
-      this.shift_key_held = true;
+      this.Shift_key_held = true;
     }
 
     if (event.keyCode === 17) {
-      this.ctrl_key_held = true;
+      this.Ctrl_key_held = true;
     }
   }
 
   @HostListener('window:keyup', ['$event'])
   keyUpEvent(event: KeyboardEvent) {        
     if (event.keyCode === 16) {
-      this.shift_key_held = false;
+      this.Shift_key_held = false;
     }
 
     if (event.keyCode === 17) {
-      this.ctrl_key_held = false;
+      this.Ctrl_key_held = false;
     }
   }
 
   PromotionCount(): number {
-    return 1 * (this.ctrl_key_held ? 5 : 1) * (this.shift_key_held ? 10 : 1);
+    return 1 * (this.Ctrl_key_held ? 5 : 1) * (this.Shift_key_held ? 10 : 1);
   }
 
   GetTradeBalance(factoryID: number): number {
     let balance = 0;
 
-    for (var i = 0; i < this.islands.length; i++) {
-      let factory = this.islands[i].Factories.filter(f => f.ID === factoryID)[0];
+    for (var i = 0; i < this.Islands.length; i++) {
+      let factory = this.Islands[i].Factories.filter(f => f.ID === factoryID)[0];
       balance += (factory.Productivity * factory.TradeBalance / 100);
     }
 
