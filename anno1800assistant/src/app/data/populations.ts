@@ -41,16 +41,17 @@ export class PopulationLevel extends PopulationLevelRaw {
         super();
         this.Name = raw.Name;
         this.Inputs = raw.Inputs;
+        this.UsesMarketplace = ['Farmers', 'Workers', 'Jornaleros', 'Obreros'].includes(this.Name);
     }
 
     HouseCount: number = 0
     PromotionTarget: PopulationLevel
     ShowUnused: boolean
-    UsesMarketplace = ['Farmers', 'Workers', 'Jornaleros', 'Obreros'];
+    UsesMarketplace: boolean
 
     GetPopulation(factories: Factory[]): number {
         let supplyWeight = 0;
-        if (this.UsesMarketplace.includes(this.Name)) {
+        if (this.UsesMarketplace) {
             supplyWeight += 5;
         }
 
