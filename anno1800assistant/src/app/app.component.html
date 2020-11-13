@@ -1,18 +1,21 @@
-<span *ngFor="let island of islands" class="island">
+<span *ngFor="let island of islands" class="island" [style.background-color]="regionColorMap[island.Region]">
   <div class="islandHeaderWrapper">
     <span class="islandHeader">
       <div class="islandNameContainer">
         <input class="islandName form-control" type="text" [(ngModel)]="island.Name" />
+        <select class="islandRegion form-control" [(ngModel)]="island.Region" (ngModelChange)="island.RegionChanged()">
+          <option *ngFor="let region of regionOptions" [value]="region.value">{{ region.label }}</option> 
+        </select>
       </div>  
     
       <span class="populationGroup">        
-        <!-- Population and Dwellings - Old World -->
+        <!-- Population and Dwellings -->
         <span class="popLabelColumn"></span>
-        <span *ngFor="let i of [0, 1, 2, 3, 4]" class="houseCountColumn header">
-          <span>{{ island.PopulationLevels[i].Name }}</span>
-          <span *ngIf="island.PopulationLevels[i].HouseCount <= 0" class="showUnusedToggle">
-            <span *ngIf="island.PopulationLevels[i].ShowUnused" class="fa fa-eye-slash" (click)="island.PopulationLevels[i].ToggleShowUnused()"></span>
-            <span *ngIf="!island.PopulationLevels[i].ShowUnused" class="fa fa-eye" (click)="island.PopulationLevels[i].ToggleShowUnused()"></span>
+        <span *ngFor="let popLevel of island.PopulationLevels" class="houseCountColumn header">
+          <span>{{ popLevel.Name }}</span>
+          <span *ngIf="popLevel.HouseCount <= 0" class="showUnusedToggle">
+            <span *ngIf="popLevel.ShowUnused" class="fa fa-eye-slash" (click)="popLevel.ToggleShowUnused()"></span>
+            <span *ngIf="!popLevel.ShowUnused" class="fa fa-eye" (click)="popLevel.ToggleShowUnused()"></span>
           </span>
         </span>
         <br />
@@ -25,10 +28,10 @@
         </span>
         
         <span>
-          <span *ngFor="let i of [0, 1, 2, 3, 4]" class="houseCountColumn">
+          <span *ngFor="let popLevel of island.PopulationLevels; let i=index" class="houseCountColumn">
             <!-- 'Upgrade House' button (all population levels except Investors and Obreros) -->
-            <input class="form-control" type="number" [(ngModel)]="island.PopulationLevels[i].HouseCount" />
-            <span type="button" class="btn btn-primary btn-sm" *ngIf="i < 4" (click)="island.PopulationLevels[i].Promote(PromotionCount())" title="Tip: Hold Shift and/or Control to change the increment">
+            <input class="form-control" type="number" [(ngModel)]="popLevel.HouseCount" />
+            <span type="button" class="btn btn-primary btn-sm" *ngIf="i < (island.PopulationLevels.length - 1)" (click)="popLevel.Promote(PromotionCount())" title="Tip: Hold Shift and/or Control to change the increment">
               <span class="fa fa-arrow-circle-right"></span>
               <span> {{ PromotionCount() }}</span>
             </span>        
@@ -38,44 +41,8 @@
         
         <span class="popLabelColumn">Population</span>
         <span>
-          <span *ngFor="let i of [0, 1, 2, 3, 4]" class="houseCountColumn populationCount">
-            {{ island.PopulationLevels[i].GetPopulation(island.Factories) }}
-          </span>
-        </span>
-      </span>
-    
-      <span  class="populationGroup">      
-        <!-- Population and Dwellings - New World -->  
-        <span *ngFor="let i of [5, 6]" class="houseCountColumn header">
-          <span>{{ island.PopulationLevels[i].Name }}</span>
-          <span *ngIf="island.PopulationLevels[i].HouseCount <= 0" class="showUnusedToggle">
-            <span *ngIf="island.PopulationLevels[i].ShowUnused" class="fa fa-eye-slash" (click)="island.PopulationLevels[i].ToggleShowUnused()"></span>
-            <span *ngIf="!island.PopulationLevels[i].ShowUnused" class="fa fa-eye" (click)="island.PopulationLevels[i].ToggleShowUnused()"></span>
-          </span>
-        </span>
-        <br />
-      
-        <!-- 'Add House' button (only for Farmers and Jornaleros) -->
-        <span type="button" class="btn btn-primary btn-sm addHouseButton" (click)="island.PopulationLevels[5].AddHouses(PromotionCount())" title="Tip: Hold Shift and/or Control to change the increment">
-          <span class="fa fa-plus"></span>
-          <span> {{ PromotionCount() }}</span>
-        </span>
-        
-        <span>
-          <span *ngFor="let i of [5, 6]" class="houseCountColumn">
-            <!-- 'Upgrade House' button (all population levels except Investors and Obreros) -->
-            <input class="form-control" type="number" [(ngModel)]="island.PopulationLevels[i].HouseCount" />
-            <span type="button" class="btn btn-primary btn-sm" *ngIf="i === 5" (click)="island.PopulationLevels[i].Promote(PromotionCount())" title="Tip: Hold Shift and/or Control to change the increment">
-              <span class="fa fa-arrow-circle-right"></span>
-              <span> {{ PromotionCount() }}</span>
-            </span>        
-          </span>
-        </span>
-        <br />
-          
-        <span>
-          <span *ngFor="let i of [5, 6]" class="houseCountColumn populationCount">
-            {{ island.PopulationLevels[i].GetPopulation(island.Factories) }}
+          <span *ngFor="let popLevel of island.PopulationLevels;" class="houseCountColumn populationCount">
+            {{ popLevel.GetPopulation(island.Factories) }}
           </span>
         </span>
       </span>

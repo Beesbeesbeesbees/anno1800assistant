@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule} from '@angular/forms';
 
 import { AppComponent } from './app.component';
+import { PopulationService } from 'src/app/data/populations';
+import { RegionService } from './data/region';
 
 @NgModule({
   declarations: [
@@ -12,7 +14,10 @@ import { AppComponent } from './app.component';
     BrowserModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    PopulationService,
+    RegionService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
