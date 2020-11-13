@@ -81,17 +81,22 @@ class PopulationLevelRaw {
 
 export class PopulationLevel extends PopulationLevelRaw {
     constructor(raw: PopulationLevelRaw) {
-        super();        
+        super();
         this.Name = raw.Name;
         this.Inputs = raw.Inputs;
+        this.UsesMarketplace = ['Farmers', 'Workers', 'Jornaleros', 'Obreros'].includes(this.Name);
     }
 
-    HouseCount: number = 0    
+    HouseCount: number = 0
     PromotionTarget: PopulationLevel
     ShowUnused: boolean
-    
+    UsesMarketplace: boolean
+
     GetPopulation(factories: Factory[]): number {
-        let supplyWeight = 5;
+        let supplyWeight = 0;
+        if (this.UsesMarketplace) {
+            supplyWeight += 5;
+        }
 
         let enabledOutputProductIDs = {};
         for (var i = 0; i < factories.length; i++) {
@@ -107,9 +112,9 @@ export class PopulationLevel extends PopulationLevelRaw {
             }
         }
 
-        return supplyWeight * this.HouseCount;        
+        return supplyWeight * this.HouseCount;
     }
-    
+
     Promote(promotionCount: number): void {
         if (!this.PromotionTarget) {
             return;
@@ -134,7 +139,7 @@ export class PopulationLevel extends PopulationLevelRaw {
     GetProductRequirement(productID: number): number {
         let input = this.Inputs.filter(i => i.ProductID === productID)[0];
         if (input) {
-            return input.Amount * this.HouseCount;            
+            return input.Amount * this.HouseCount;
         }
 
         return 0;

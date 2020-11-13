@@ -4,6 +4,10 @@
     vertical-align: top;
 }
 
+.buttonTray > * {
+    margin-left: 4px;
+}
+
 .island {
     border: 1px solid gray;
     padding: 5px;
@@ -146,6 +150,9 @@ input[type="number"] {
 }
 .factory.slightlyUnsatisfied {
     background-color: #fff26d;
+}
+.factory.focusedFactory {
+    box-shadow: inset 0px 0px 5px #e756f9
 }
 
 .productivityColumn {

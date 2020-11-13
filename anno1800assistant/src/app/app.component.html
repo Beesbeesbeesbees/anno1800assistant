@@ -1,5 +1,17 @@
-<span *ngFor="let island of islands" class="island" [style.background-color]="regionColorMap[island.Region]">
+<span *ngFor="let island of Islands; index as i" class="island" [style.background-color]="regionColorMap[island.Region]">
   <div class="islandHeaderWrapper">
+    <span class="pull-right buttonTray">
+      <button type="button" class="btn btn-primary btn-sm" [disabled]="i === 0" (click)="MoveIslandUp(i)">
+        <span class="fa fa-arrow-up"></span>
+      </button> 
+      <button type="button" class="btn btn-primary btn-sm" [disabled]="i === (Islands.length - 1)" (click)="MoveIslandDown(i)">
+          <span class="fa fa-arrow-down"></span>
+      </button>
+      <button type="button" class="btn btn-primary btn-sm" (click)="island.ToggleMinimized()">
+        <span [className]="'fa ' + (island.IsMinimized ? 'fa-window-maximize' : 'fa-window-minimize')"></span>
+      </button>
+    </span>
+    
     <span class="islandHeader">
       <div class="islandNameContainer">
         <input class="islandName form-control" type="text" [(ngModel)]="island.Name" />
@@ -8,7 +20,7 @@
         </select>
       </div>  
     
-      <span class="populationGroup">        
+      <span class="populationGroup" *ngIf="!island.IsMinimized">        
         <!-- Population and Dwellings -->
         <span class="popLabelColumn"></span>
         <span *ngFor="let popLevel of island.PopulationLevels" class="houseCountColumn header">
@@ -28,10 +40,10 @@
         </span>
         
         <span>
-          <span *ngFor="let popLevel of island.PopulationLevels; let i=index" class="houseCountColumn">
+          <span *ngFor="let popLevel of island.PopulationLevels; index as p" class="houseCountColumn">
             <!-- 'Upgrade House' button (all population levels except Investors and Obreros) -->
             <input class="form-control" type="number" [(ngModel)]="popLevel.HouseCount" />
-            <span type="button" class="btn btn-primary btn-sm" *ngIf="i < (island.PopulationLevels.length - 1)" (click)="popLevel.Promote(PromotionCount())" title="Tip: Hold Shift and/or Control to change the increment">
+            <span type="button" class="btn btn-primary btn-sm" *ngIf="p < (island.PopulationLevels.length - 1)" (click)="popLevel.Promote(PromotionCount())" title="Tip: Hold Shift and/or Control to change the increment">
               <span class="fa fa-arrow-circle-right"></span>
               <span> {{ PromotionCount() }}</span>
             </span>        
@@ -56,7 +68,7 @@
   </div>
 
   <!-- Factories -->
-  <div class="factories">
+  <div class="factories" *ngIf="!island.IsMinimized">
     <span *ngFor="let i of [0, 1]" class="factoryColumn">
       <div class="factoryHeader" [style.visibility]="island.EnabledFactoryGroups().length === 0 ? 'hidden' : ''">
         <span class="factoryNameColumn"></span>
@@ -66,7 +78,8 @@
         <span class="builtColumn">Built</span>
         <span class="tradeColumn">Trade</span>
       </div>
-      <div *ngFor="let factory of island.GetColumnLayouts()[i]" [className]="factory.GetSatisfactionClass(island.PopulationLevels)">
+      <div *ngFor="let factory of island.GetColumnLayouts()[i]" [className]="factory.GetSatisfactionClass(island.PopulationLevels)
+       + (factory.ID === FocusedFactoryID ? ' focusedFactory' : '')">
         <label>
           <span class="factoryNameColumn">        
             <span *ngIf="factory.ParentFactory" class="indent"></span>
@@ -79,7 +92,7 @@
         </label>
         <!-- Hiding the last of the columns for factories whose outputs have zero amounts. These are public service buildings and are only included for population count. -->    
         <span class="productivityColumn" >
-          <input class="hiddenForPublicService form-control" type="number" [(ngModel)]="factory.Productivity" [disabled]="!factory.Enabled" />
+          <input class="hiddenForPublicService form-control" type="number" [(ngModel)]="factory.Productivity" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
         </span>
         <span class="requiredColumn">
           <span class="hiddenForPublicService">
@@ -87,10 +100,10 @@
           </span>
         </span>
         <span class="builtColumn">
-          <input class="hiddenForPublicService form-control" type="number" [(ngModel)]="factory.BuiltCount" [disabled]="!factory.Enabled" />
+          <input class="hiddenForPublicService form-control" type="number" [(ngModel)]="factory.BuiltCount" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
         </span>
         <span class="tradeColumn" [attr.title]="'Total worldwide trade balance for ' + factory.Name + ' is ' + GetTradeBalance(factory.ID)">
-          <input [className]="'hiddenForPublicService form-control' + (IsTradeBalanced(factory.ID) ? '' : ' unbalancedTrade')" type="number" [(ngModel)]="factory.TradeBalance" [disabled]="!factory.Enabled" />
+          <input [className]="'hiddenForPublicService form-control' + (IsTradeBalanced(factory.ID) ? '' : ' unbalancedTrade')" type="number" [(ngModel)]="factory.TradeBalance" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
         </span>
       </div>
     </span>

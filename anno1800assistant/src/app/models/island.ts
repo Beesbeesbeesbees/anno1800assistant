@@ -5,6 +5,7 @@ import { Factory, FactorySaveInfo, Factories } from '../data/factories';
 export class Island {
     Name: string
     Region: Region;
+    IsMinimized: boolean
     PopulationService: PopulationService;
     PopulationLevels: PopulationLevel[]
     Factories: Factory[]
@@ -12,7 +13,7 @@ export class Island {
   
     constructor(name: string, populationService: PopulationService, saveInfo?: IslandSaveInfo) {
       this.PopulationService = populationService;
-      this.Name = name;
+      this.Name = name;      
       this.Region = 'OldWorld';
             
       this.RegionChanged(saveInfo);
@@ -49,6 +50,7 @@ export class Island {
             }
 
             this.Region = saveInfo.Region || this.Region;
+            this.IsMinimized = saveInfo.IsMinimized;
             this.PopulationLevels = this.PopulationService.getNewPopulationForRegion(this.Region);      
           
             for (var i = 0; i < saveInfo.PopulationLevels.length; i++) {
@@ -237,6 +239,7 @@ export class Island {
   export class IslandSaveInfo {
     Name: string
     Region: Region
+    IsMinimized: boolean
     PopulationLevels: PopulationLevelSaveInfo[]
     Factories: FactorySaveInfo[]
   }
