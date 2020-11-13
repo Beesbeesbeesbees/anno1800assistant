@@ -10,7 +10,7 @@ export class PopulationLevelsFactory {
         {"Name":"Workers","Inputs":[{"ProductID":120020,"Amount":0.0,"SupplyWeight":5,"MoneyValue":0},{"ProductID":1010200,"Amount":0.0008333334,"SupplyWeight":3,"MoneyValue":10},{"ProductID":1010216,"Amount":0.001111112,"SupplyWeight":0,"MoneyValue":30},{"ProductID":1010237,"Amount":0.001025642,"SupplyWeight":2,"MoneyValue":30},{"ProductID":1010238,"Amount":0.000333334,"SupplyWeight":3,"MoneyValue":20},{"ProductID":1010213,"Amount":0.00030303,"SupplyWeight":3,"MoneyValue":20},{"ProductID":1010203,"Amount":0.000138889,"SupplyWeight":2,"MoneyValue":20},{"ProductID":1010214,"Amount":0.00025641,"SupplyWeight":0,"MoneyValue":50},{"ProductID":1010351,"Amount":0.0,"SupplyWeight":2,"MoneyValue":0}]},
         {"Name":"Farmers","Inputs":[{"ProductID":120020,"Amount":0.0,"SupplyWeight":5,"MoneyValue":0},{"ProductID":1010200,"Amount":0.0004166667,"SupplyWeight":3,"MoneyValue":10},{"ProductID":1010216,"Amount":0.000555556,"SupplyWeight":0,"MoneyValue":30},{"ProductID":1010237,"Amount":0.000512821,"SupplyWeight":2,"MoneyValue":30}]}
     ];
-    
+
     GetPopulationLevels(): PopulationLevel[] {
         let result: PopulationLevel[] = [];
         result[0] = new PopulationLevel(this.rawData.filter(x => x.Name === 'Farmers')[0]);
@@ -38,17 +38,22 @@ class PopulationLevelRaw {
 
 export class PopulationLevel extends PopulationLevelRaw {
     constructor(raw: PopulationLevelRaw) {
-        super();        
+        super();
         this.Name = raw.Name;
         this.Inputs = raw.Inputs;
+        this.UsesMarketplace = ['Farmers', 'Workers', 'Jornaleros', 'Obreros'].includes(this.Name);
     }
 
-    HouseCount: number = 0    
+    HouseCount: number = 0
     PromotionTarget: PopulationLevel
     ShowUnused: boolean
-    
+    UsesMarketplace: boolean
+
     GetPopulation(factories: Factory[]): number {
-        let supplyWeight = 5;
+        let supplyWeight = 0;
+        if (this.UsesMarketplace) {
+            supplyWeight += 5;
+        }
 
         let enabledOutputProductIDs = {};
         for (var i = 0; i < factories.length; i++) {
@@ -64,9 +69,9 @@ export class PopulationLevel extends PopulationLevelRaw {
             }
         }
 
-        return supplyWeight * this.HouseCount;        
+        return supplyWeight * this.HouseCount;
     }
-    
+
     Promote(promotionCount: number): void {
         if (!this.PromotionTarget) {
             return;
@@ -91,7 +96,7 @@ export class PopulationLevel extends PopulationLevelRaw {
     GetProductRequirement(productID: number): number {
         let input = this.Inputs.filter(i => i.ProductID === productID)[0];
         if (input) {
-            return input.Amount * this.HouseCount;            
+            return input.Amount * this.HouseCount;
         }
 
         return 0;
