@@ -43,10 +43,16 @@ export class AppComponent implements OnInit {
   ngDoCheck() {
     this.Autosave();    
   }
+
+  ResetButton() {
+    if (confirm('Are you sure you want to reset? This will erase all of your world data. You can save a backup of your world data to your computer with the Save button.')) {
+      this.Reset();
+    }
+  }
   
   Reset() {
-    this.islands = [];
-    this.AddIsland();
+      this.islands = [];
+      this.AddIsland();
   }  
 
   AddIsland() {

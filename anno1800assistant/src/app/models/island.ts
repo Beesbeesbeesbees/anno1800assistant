@@ -16,21 +16,45 @@ export class Island {
       this.Region = 'OldWorld';
             
       this.RegionChanged(saveInfo);
-    }
-    
+    }    
     
     RegionChanged(saveInfo?: IslandSaveInfo) {
         this.Factories = [];
         this.FactoryGroups = [];
-        
-        if (saveInfo) {
-          this.Region = saveInfo.Region || this.Region;
-          this.PopulationLevels = this.PopulationService.getNewPopulationForRegion(this.Region);      
+
+        if (saveInfo) {            
+            if (!saveInfo.Region) {
+                // This save is from before the DLC update! We'll attempt to guess at its type based on the old convention.
+                const oldWorldCount = saveInfo.PopulationLevels[0].HouseCount + saveInfo.PopulationLevels[1].HouseCount + saveInfo.PopulationLevels[2].HouseCount 
+                    + saveInfo.PopulationLevels[3].HouseCount + saveInfo.PopulationLevels[4].HouseCount;
+                const newWorldCount = saveInfo.PopulationLevels[5].HouseCount + saveInfo.PopulationLevels[6].HouseCount;
+
+                if (newWorldCount > oldWorldCount) {
+                    saveInfo.Region = 'NewWorld';
+                    saveInfo.PopulationLevels = [
+                        saveInfo.PopulationLevels[5],
+                        saveInfo.PopulationLevels[6],
+                    ];
+                }
+                else {
+                    saveInfo.Region = 'OldWorld';
+                    saveInfo.PopulationLevels = [
+                        saveInfo.PopulationLevels[0],
+                        saveInfo.PopulationLevels[1],
+                        saveInfo.PopulationLevels[2],
+                        saveInfo.PopulationLevels[3],
+                        saveInfo.PopulationLevels[4],
+                    ];
+                }
+            }
+
+            this.Region = saveInfo.Region || this.Region;
+            this.PopulationLevels = this.PopulationService.getNewPopulationForRegion(this.Region);      
           
-          for (var i = 0; i < saveInfo.PopulationLevels.length; i++) {
-            this.PopulationLevels[i].HouseCount = saveInfo.PopulationLevels[i].HouseCount;
-            this.PopulationLevels[i].ShowUnused = saveInfo.PopulationLevels[i].ShowUnused;
-          }
+            for (var i = 0; i < saveInfo.PopulationLevels.length; i++) {
+                this.PopulationLevels[i].HouseCount = saveInfo.PopulationLevels[i].HouseCount;
+                this.PopulationLevels[i].ShowUnused = saveInfo.PopulationLevels[i].ShowUnused;
+            }
         }
         else {
           this.PopulationLevels = this.PopulationService.getNewPopulationForRegion(this.Region);      
@@ -193,6 +217,20 @@ export class Island {
       }
   
       return columns;
+    }
+
+    GetTotalHouseCount(): number {
+        let result = 0;
+
+        if (!this.PopulationLevels) {
+            return;
+        }
+
+        for (let i = 0; i < this.PopulationLevels.length; i++) {
+            result += this.PopulationLevels[i].HouseCount;
+        }
+
+        return result;
     }
   }
 

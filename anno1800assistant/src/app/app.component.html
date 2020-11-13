@@ -3,7 +3,7 @@
     <span class="islandHeader">
       <div class="islandNameContainer">
         <input class="islandName form-control" type="text" [(ngModel)]="island.Name" />
-        <select class="islandRegion form-control" [(ngModel)]="island.Region" (ngModelChange)="island.RegionChanged()">
+        <select class="islandRegion form-control" [(ngModel)]="island.Region" [disabled]="island.GetTotalHouseCount() > 0" (ngModelChange)="island.RegionChanged()">
           <option *ngFor="let region of regionOptions" [value]="region.value">{{ region.label }}</option> 
         </select>
       </div>  
@@ -50,6 +50,10 @@
     </span>
   </div>  
 
+  <div *ngIf="island.Region === 'Enbasa' || island.Region === 'Arctic'">
+    <br />
+    TODO: What production chains go in Arctic and Enbasa? Need to play the game!
+  </div>
 
   <!-- Factories -->
   <div class="factories">
@@ -109,7 +113,7 @@
   <span> Load</span>
 </span>
 
-<span type="button" class="btn btn-primary bottomButton" (click)="Reset()">
+<span type="button" class="btn btn-primary bottomButton" (click)="ResetButton()">
   <span class="fa fa-repeat"></span>
   <span> Reset</span>
 </span>

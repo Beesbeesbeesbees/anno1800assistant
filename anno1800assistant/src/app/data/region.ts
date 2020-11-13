@@ -8,7 +8,7 @@ export class RegionService {
     static regionFriendlyNameMap: { label: string, value: Region }[] = [
         { label: 'Old World', value: 'OldWorld' },
         { label: 'New World', value: 'NewWorld' },
-        { label: 'Arctic World', value: 'Arctic' },
+        { label: 'Arctic', value: 'Arctic' },
         { label: 'Enbasa', value: 'Enbasa' }
     ];
 
