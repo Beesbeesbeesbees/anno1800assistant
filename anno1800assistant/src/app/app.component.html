@@ -1,23 +1,22 @@
 <span *ngFor="let island of Islands; index as i" class="island" [style.background-color]="regionColorMap[island.Region]">
-  <div class="islandHeaderWrapper">
-    <span class="pull-right buttonTray">
-      <button type="button" class="btn btn-primary btn-sm" [disabled]="i === 0" (click)="MoveIslandUp(i)">
-        <span class="fa fa-arrow-up"></span>
-      </button> 
-      <button type="button" class="btn btn-primary btn-sm" [disabled]="i === (Islands.length - 1)" (click)="MoveIslandDown(i)">
-          <span class="fa fa-arrow-down"></span>
-      </button>
-      <button type="button" class="btn btn-primary btn-sm" (click)="island.ToggleMinimized()">
-        <span [className]="'fa ' + (island.IsMinimized ? 'fa-window-maximize' : 'fa-window-minimize')"></span>
-      </button>
-    </span>
-    
+  <div class="islandHeaderWrapper">    
     <span class="islandHeader">
       <div class="islandNameContainer">
         <input class="islandName form-control" type="text" [(ngModel)]="island.Name" />
         <select class="islandRegion form-control" [(ngModel)]="island.Region" [disabled]="island.GetTotalHouseCount() > 0" (ngModelChange)="island.RegionChanged()">
           <option *ngFor="let region of regionOptions" [value]="region.value">{{ region.label }}</option> 
         </select>
+        <span class="pull-right buttonTray">
+          <button type="button" class="btn btn-primary btn-sm" [disabled]="i === 0" (click)="MoveIslandUp(i)">
+            <span class="fa fa-arrow-up"></span>
+          </button> 
+          <button type="button" class="btn btn-primary btn-sm" [disabled]="i === (Islands.length - 1)" (click)="MoveIslandDown(i)">
+              <span class="fa fa-arrow-down"></span>
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" (click)="island.ToggleMinimized()">
+            <span [className]="'fa ' + (island.IsMinimized ? 'fa-window-maximize' : 'fa-window-minimize')"></span>
+          </button>
+        </span>
       </div>  
     
       <span class="populationGroup" *ngIf="!island.IsMinimized">        

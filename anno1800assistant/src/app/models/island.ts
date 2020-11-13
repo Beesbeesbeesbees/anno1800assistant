@@ -47,6 +47,13 @@ export class Island {
                         saveInfo.PopulationLevels[4],
                     ];
                 }
+
+                // For the grain silo update, grain farm was updated from factory ID 1010262 to 269851.
+                for (let i = 0; i < saveInfo.Factories.length; i++) {
+                  if (saveInfo.Factories[i].FactoryID === 1010262) {
+                    saveInfo.Factories[i].FactoryID = 269851;
+                  }
+                }
             }
 
             this.Region = saveInfo.Region || this.Region;
@@ -233,6 +240,10 @@ export class Island {
         }
 
         return result;
+    }
+
+    ToggleMinimized() {
+      this.IsMinimized = !this.IsMinimized;
     }
   }
 

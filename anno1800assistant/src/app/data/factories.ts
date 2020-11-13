@@ -654,7 +654,7 @@ export class Factories {
             },
             {
                "ID":269851,
-               "Name":"Grain Farm LESS MODULES",
+               "Name":"Grain Farm",
                "CycleTime":60,
                "Inputs":[
                   
@@ -2455,7 +2455,7 @@ export class Factories {
             },
             {
                "ID":1010262,
-               "Name":"Grain Farm",
+               "Name":"Grain Farm (Probably pre-DLC?)",
                "CycleTime":60,
                "Inputs":[
                   
