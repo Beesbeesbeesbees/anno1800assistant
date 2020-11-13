@@ -11,7 +11,6 @@
 .island {
     border: 1px solid gray;
     padding: 5px;
-    background-color: #ffeec4;
 }
 
 .islandName {
@@ -20,17 +19,26 @@
     text-align: center;
 }
 
+.islandRegion {
+    width: 20%;
+    display: inline-block;
+    text-align: center;
+    margin-left: 20px;
+}
+
 .islandNameContainer, .islandHeaderWrapper {
     text-align: center;    
 }
 
 .islandHeader {
-    text-align: left;
+    text-align: center;
     display: inline-block;
+    width: 100%;
 }
 
 .populationGroup {
     display: inline-block;
+    text-align: left;
 }
 .populationGroup:not(:first-of-type) {
     margin-left: 30px;
@@ -106,6 +114,7 @@ input[type="number"] {
     font-weight: bold;
     text-align: center;
     padding: 1px 2px 1px 9px;
+    margin-bottom: 5px;
 }
 
 .factories input[type="number"] {
