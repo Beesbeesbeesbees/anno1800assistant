@@ -1,4 +1,4 @@
-import { Region } from '../data/region';
+import { Region, RegionService } from '../data/region';
 import { PopulationLevel, PopulationService, PopulationLevelSaveInfo } from '../data/populations';
 import { Factory, FactorySaveInfo, Factories } from '../data/factories';
 
@@ -68,69 +68,10 @@ export class Island {
         else {
           this.PopulationLevels = this.PopulationService.getNewPopulationForRegion(this.Region);      
         }
-    
-        // Referencing factories by ID here for possible additional language support
-        if (this.Region === 'OldWorld') {
-            // Farmers
-            this.AddFactoryChain(1010278, saveInfo); // Fishery    
-            this.AddFactoryChain(1010294, saveInfo); // Schnapps
-            this.AddFactoryChain(1010315, saveInfo); // Knitter
-            // Workers
-            this.AddFactoryChain(1010316, saveInfo); // Sausages
-            this.AddFactoryChain(1010291, saveInfo); // Bread
-            this.AddFactoryChain(1010281, saveInfo); // Soap
-            this.AddFactoryChain(1010292, saveInfo); // Beer
-            this.AddFactoryChain(1010360, saveInfo); // School
-            // Artisans
-            this.AddFactoryChain(1010295, saveInfo); // Canned Food
-            this.AddFactoryChain(1010284, saveInfo); // Sewing Machines
-            this.AddFactoryChain(1010340, saveInfo); // Rum
-            this.AddFactoryChain(1010325, saveInfo); // Fur Coats
-            this.AddFactoryChain(1010362, saveInfo); // University
-            // Engineers
-            this.AddFactoryChain(101250, saveInfo); // Glasses
-            this.AddFactoryChain(1010323, saveInfo); // High Wheelers
-            this.AddFactoryChain(1, saveInfo); // Electricity
-            this.AddFactoryChain(101252, saveInfo); // Coffee
-            this.AddFactoryChain(1010324, saveInfo); // Pocket Watches
-            this.AddFactoryChain(1010286, saveInfo); // Light Bulbs
-            this.AddFactoryChain(1010365, saveInfo); // Bank
-            // Investors
-            this.AddFactoryChain(100659, saveInfo); // Champagne
-            this.AddFactoryChain(1010342, saveInfo); // Cigars
-            this.AddFactoryChain(1010364, saveInfo); // Club House
-            this.AddFactoryChain(1010341, saveInfo); // Chocolate
-            this.AddFactoryChain(1010328, saveInfo); // Jewelry
-            this.AddFactoryChain(1010326, saveInfo); // Gramophones
-            this.AddFactoryChain(1010303, saveInfo); // Steam Carriages
-        }
 
-        else if (this.Region === 'NewWorld') {
-            // Jornaleros
-            this.AddFactoryChain(101264, saveInfo); // Fried Plantains
-            this.AddFactoryChain(1010340, saveInfo); // Rum
-            this.AddFactoryChain(101266, saveInfo); // Ponchos
-            this.AddFactoryChain(2, saveInfo); // Chapel
-            // Obreros
-            this.AddFactoryChain(101271, saveInfo); // Tortillas
-            this.AddFactoryChain(101252, saveInfo); // Coffee
-            this.AddFactoryChain(3, saveInfo); // Boxing Arena
-            this.AddFactoryChain(101273, saveInfo); // Bowler Hats
-            this.AddFactoryChain(1010292, saveInfo); // Beer
-            this.AddFactoryChain(1010284, saveInfo); // Sewing Machines
-            this.AddFactoryChain(1010342, saveInfo); // Cigars
-        }
-
-        else if (this.Region === 'Enbesa') {
-          // Shepherds
-          this.AddFactoryChain(114456, saveInfo); // Goat Farm
-          this.AddFactoryChain(114466, saveInfo); // Embroiderer
-          this.AddFactoryChain(114519, saveInfo); // Musician's Court
-          this.AddFactoryChain(114444, saveInfo); // Dry-House
-          this.AddFactoryChain(114468, saveInfo); // Tea Spicer
-          this.AddFactoryChain(118725, saveInfo); // Ceramics Workshop
-          this.AddFactoryChain(114469, saveInfo); // Tapestry Looms
-        }
+        RegionService.regionFactories[this.Region].forEach(regionFactoryID => {
+          this.AddFactoryChain(regionFactoryID, saveInfo);
+        })
     }
   
   
