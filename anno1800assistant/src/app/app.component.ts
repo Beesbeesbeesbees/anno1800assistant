@@ -195,9 +195,10 @@ export class AppComponent implements OnInit {
     let balance = 0;
 
     for (var i = 0; i < this.Islands.length; i++) {
-      const factory = this.Islands[i].Factories.filter(f => f.ID === factoryID)[0];
-      if (factory) {
-        balance += (factory.Productivity * factory.TradeBalance / 100);
+      for (var k = 0; k < this.Islands[i].Factories.length; k++) {
+        if (this.Islands[i].Factories[k].ID === factoryID) {
+          balance += (this.Islands[i].Factories[k].Productivity * this.Islands[i].Factories[k].TradeBalance / 100);
+        }
       }
     }
 

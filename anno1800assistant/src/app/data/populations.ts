@@ -59,7 +59,7 @@ export class PopulationService {
             result[0].PromotionTarget = result[1];
 
             return result;
-        }, 'Enbasa': () => {
+        }, 'Enbesa': () => {
             const result: PopulationLevel[] = [
                 new PopulationLevel(this.rawData.filter(x => x.Name === 'Shepherds')[0]),
                 new PopulationLevel(this.rawData.filter(x => x.Name === 'Elders')[0]),

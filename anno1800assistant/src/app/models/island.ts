@@ -120,6 +120,17 @@ export class Island {
             this.AddFactoryChain(1010284, saveInfo); // Sewing Machines
             this.AddFactoryChain(1010342, saveInfo); // Cigars
         }
+
+        else if (this.Region === 'Enbesa') {
+          // Shepherds
+          this.AddFactoryChain(114456, saveInfo); // Goat Farm
+          this.AddFactoryChain(114466, saveInfo); // Embroiderer
+          this.AddFactoryChain(114519, saveInfo); // Musician's Court
+          this.AddFactoryChain(114444, saveInfo); // Dry-House
+          this.AddFactoryChain(114468, saveInfo); // Tea Spicer
+          this.AddFactoryChain(118725, saveInfo); // Ceramics Workshop
+          this.AddFactoryChain(114469, saveInfo); // Tapestry Looms
+        }
     }
   
   
