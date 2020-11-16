@@ -2779,16 +2779,16 @@ export class Factory extends FactoryRaw {
         if (this.ParentFactory) {
             let parentInput = this.ParentFactory.Inputs.filter(i => i.ProductID === outputProductID)[0];
             if (parentInput) {
-                let parentRequiredFactories = this.ParentFactory.GetRequiredCount(allPopulationLevels);
-                let parentCycleTime = this.ParentFactory.CycleTime > 0 ? this.ParentFactory.CycleTime : 30;                
-                let childParentFactoryRatio = parentInput.Amount / this.Outputs[0].Amount * cycleTime / parentCycleTime;
+                const parentRequiredFactories = this.ParentFactory.GetRequiredCount(allPopulationLevels) - this.ParentFactory.TradeBalance;                
+                const parentCycleTime = this.ParentFactory.CycleTime > 0 ? this.ParentFactory.CycleTime : 30;                
+                const childParentFactoryRatio = parentInput.Amount / this.Outputs[0].Amount * cycleTime / parentCycleTime;
                 requiredFactoriesFromParent = parentRequiredFactories * childParentFactoryRatio;
             }
         }
         
         let producedPerMinute = this.Outputs[0].Amount * 60 / cycleTime;
 
-        return Math.round((amountRequiredPerMinute / producedPerMinute + requiredFactoriesFromParent) * 100 * 100 / this.Productivity) / 100;
+        return Math.max(Math.round((amountRequiredPerMinute / producedPerMinute + requiredFactoriesFromParent) * 100 * 100 / this.Productivity) / 100, 0);
     }
 
     GetSatisfactionClass(allPopulationLevels: PopulationLevel[]): string {
@@ -2811,7 +2811,7 @@ export class Factory extends FactoryRaw {
         let required = this.GetRequiredCount(allPopulationLevels);
         let satisfaction = this.BuiltCount + this.TradeBalance;
 
-        if(satisfaction > required) {
+        if(satisfaction >= required) {
             result = result + ' satisfied';
         }
         else if (required - satisfaction < 0.5) {
