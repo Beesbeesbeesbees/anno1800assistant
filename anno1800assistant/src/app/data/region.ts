@@ -82,13 +82,21 @@ export class RegionService {
 
         ],
         'Enbesa': [
+            // Shepherds
             114456, // Goat Farm
             114466, // Embroiderer
             114519, // Musician's Court
             114444, // Dry-House
             114468, // Tea Spicer
+            
+            // Elders
             118725, // Ceramics Workshop
             114469, // Tapestry Looms
+            114471, // Wat Kitchen
+            114472, // Pipe Maker
+            114470, // Luminer
+            101250, // Spectacle Factory
+            114464, // Lanternsmith
         ]
     };
 }
