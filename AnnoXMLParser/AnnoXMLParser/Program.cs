@@ -26,7 +26,9 @@ namespace AnnoXMLParser {
 
                 if (element.Name == "Template" && (
                     element.Value == "FactoryBuilding7"
+                        || element.Value == "FactoryBuilding7_Arctic"
                         || element.Value == "FarmBuilding"
+                        || element.Value == "FarmBuilding_Arctic"
                         || element.Value == "HeavyFactoryBuilding"
                         || element.Value == "PublicServiceBuilding"
                         || element.Value == "SlotFactoryBuilding7"

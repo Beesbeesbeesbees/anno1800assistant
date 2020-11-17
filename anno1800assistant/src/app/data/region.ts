@@ -79,7 +79,8 @@ export class RegionService {
             1010342, // Cigars
         ],
         'Arctic': [
-
+            // Explorers
+            112668, // Pemmican
         ],
         'Enbesa': [
             // Shepherds
