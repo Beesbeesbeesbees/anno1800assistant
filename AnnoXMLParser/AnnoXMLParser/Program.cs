@@ -192,7 +192,7 @@ namespace AnnoXMLParser {
                         if (!string.IsNullOrEmpty(sAmount)) {
                             decimal amount = 0m;
                             if (!decimal.TryParse(sAmount, out amount)) {
-                                decimal.Parse(sAmount, System.Globalization.NumberStyles.Float);
+                                amount = decimal.Parse(sAmount, System.Globalization.NumberStyles.Float);
                             }
                             input.Amount = amount;
                         }
