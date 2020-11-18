@@ -67,8 +67,14 @@ input[type="number"] {
 }
 
 .houseCountColumn {
-    width: 140px;
+    width: auto;
     display: inline-block;
+}
+.houseCountColumn.hasAddButton .houseCountColumnLabel {
+    margin-left: 73px;
+}
+.houseCountColumn .houseCountColumnLabel {
+    margin-left: 13px;
 }
 .houseCountColumn.header {
     text-align: right;
@@ -85,6 +91,7 @@ input[type="number"] {
 }
 .houseCountColumn > .btn {
     margin-left: 5px;
+    margin-right: 5px;
 }
 .houseCountColumn:last-child {
     width: 50px;

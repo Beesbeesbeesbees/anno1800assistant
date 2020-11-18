@@ -33,6 +33,7 @@ namespace AnnoXMLParser {
                         || element.Value == "PublicServiceBuilding"
                         || element.Value == "SlotFactoryBuilding7"
                         || element.Value == "FreeAreaBuilding"
+                        || element.Value == "FreeAreaBuilding_Arctic"
                 )) {
                     factoryXMLs.Add(element.Parent);
                 }

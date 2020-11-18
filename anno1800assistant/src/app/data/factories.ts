@@ -37,7 +37,7 @@ export class Factories {
             {"ID":122963,"Name":"Wanza Woodcutter","CycleTime":15,"Inputs":[],"Outputs":[{"ProductID":114356,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
             {"ID":270044,"Name":"Fuel Station (GASOLINE TEST)","CycleTime":0,"Inputs":[{"ProductID":1010566,"Amount":1}],"Outputs":[{"ProductID":270042,"Amount":5}],"IsOldWorld":true,"IsNewWorld":false},
             {"ID":269951,"Name":"Silo_Test","CycleTime":0,"Inputs":[{"ProductID":1010192,"Amount":1}],"Outputs":[{"ProductID":1010193,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
-            {"ID":269851,"Name":"Grain Farm LESS MODULES","CycleTime":60,"Inputs":[],"Outputs":[{"ProductID":1010192,"Amount":1}],"IsOldWorld":true,"IsNewWorld":false},
+            {"ID":269851,"Name":"Grain Farm","CycleTime":60,"Inputs":[],"Outputs":[{"ProductID":1010192,"Amount":1}],"IsOldWorld":true,"IsNewWorld":false},
             {"ID":269850,"Name":"Grain Farm (GASOLINE TEST)","CycleTime":60,"Inputs":[],"Outputs":[{"ProductID":1010192,"Amount":1}],"IsOldWorld":true,"IsNewWorld":false},
             {"ID":119028,"Name":"Fuel Station","CycleTime":15,"Inputs":[{"ProductID":1010566,"Amount":1}],"Outputs":[{"ProductID":270042,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
             {"ID":269840,"Name":"Fuel Station","CycleTime":15,"Inputs":[{"ProductID":1010566,"Amount":1}],"Outputs":[{"ProductID":270042,"Amount":1}],"IsOldWorld":false,"IsNewWorld":true},
@@ -53,8 +53,12 @@ export class Factories {
             {"ID":114704,"Name":"Sawmill","CycleTime":15,"Inputs":[{"ProductID":120008,"Amount":1}],"Outputs":[{"ProductID":1010196,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
             {"ID":112674,"Name":"Seal Hunter","CycleTime":0,"Inputs":[],"Outputs":[{"ProductID":112696,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
             {"ID":112666,"Name":"Whale Hunter","CycleTime":60,"Inputs":[],"Outputs":[{"ProductID":112699,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
+            {"ID":116034,"Name":"Prime Hunting Cabin","CycleTime":15,"Inputs":[],"Outputs":[{"ProductID":1010209,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
             {"ID":112682,"Name":"Husky Farm","CycleTime":120,"Inputs":[],"Outputs":[{"ProductID":112698,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
+            {"ID":112673,"Name":"Bear Hunter","CycleTime":90,"Inputs":[],"Outputs":[{"ProductID":112695,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
             {"ID":112676,"Name":"Goose Farm","CycleTime":120,"Inputs":[],"Outputs":[{"ProductID":112697,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
+            {"ID":112667,"Name":"Caribou Hunter","CycleTime":60,"Inputs":[],"Outputs":[{"ProductID":112694,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
+            {"ID":114703,"Name":"Lumberjack's Hut","CycleTime":15,"Inputs":[],"Outputs":[{"ProductID":120008,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
             {"ID":101122,"Name":"Dynamite Shop","CycleTime":0,"Inputs":[],"Outputs":[],"IsOldWorld":false,"IsNewWorld":false},
             {"ID":100806,"Name":"Edvard's Timber Yard","CycleTime":0,"Inputs":[],"Outputs":[{"ProductID":120008,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false},
             {"ID":100767,"Name":"Edvard's Church","CycleTime":0,"Inputs":[],"Outputs":[{"ProductID":1010350,"Amount":0}],"IsOldWorld":false,"IsNewWorld":false},
@@ -249,7 +253,8 @@ export class Factory extends FactoryRaw {
         if (this.ParentFactory) {
             let parentInput = this.ParentFactory.Inputs.filter(i => i.ProductID === outputProductID)[0];
             if (parentInput) {
-                const parentRequiredFactories = this.ParentFactory.GetRequiredCount(allPopulationLevels) - this.ParentFactory.TradeBalance;                
+                const parentRequiredNormalized100Productivity = this.ParentFactory.GetRequiredCount(allPopulationLevels) * this.ParentFactory.Productivity / 100;
+                const parentRequiredFactories = parentRequiredNormalized100Productivity - this.ParentFactory.TradeBalance;
                 const parentCycleTime = this.ParentFactory.CycleTime > 0 ? this.ParentFactory.CycleTime : 30;                
                 const childParentFactoryRatio = parentInput.Amount / this.Outputs[0].Amount * cycleTime / parentCycleTime;
                 requiredFactoriesFromParent = parentRequiredFactories * childParentFactoryRatio;

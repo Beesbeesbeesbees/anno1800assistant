@@ -61,6 +61,18 @@ export class RegionService {
             1010328, // Jewelry
             1010326, // Gramophones
             1010303, // Steam Carriages
+
+            // Scholars
+            118733,  // Bootmaker
+            118734,  // Tailor's Shop
+            101273,  // Bowler Hats
+            114468,  // Tea Spicer
+            114471,  // Wat Kitchen
+            114469,  // Tapestry Looms
+            118735,  // Telephone Manufacturer
+            114472,  // Pipe Maker
+
+
         ],
         'NewWorld': [            
             // Jornaleros
@@ -80,7 +92,16 @@ export class RegionService {
         ],
         'Arctic': [
             // Explorers
-            112668, // Pemmican
+            112668,  // Pemmican
+            112675,  // Sleeping Bag Factory
+            112679,  // Oil Lamp Factory
+            1010294, // Schnapps Distillery
+
+            // Technicians
+            1010295, // Cannery
+            112672,  // Parka Factory
+            112680,  // Husky Sled Factory
+            101252,  // Coffee Roaster
         ],
         'Enbesa': [
             // Shepherds
