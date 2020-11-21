@@ -57,9 +57,7 @@ input[type="number"] {
 }
 
 .showUnusedToggle {    
-    position: absolute;
-    bottom: 0px;
-    right: -10px;
+    margin-left: 5px;
 }
 .showUnusedToggle, .showUnusedToggle * {
     cursor: pointer;
@@ -71,10 +69,16 @@ input[type="number"] {
     display: inline-block;
 }
 .houseCountColumn.hasAddButton .houseCountColumnLabel {
-    margin-left: 73px;
+    margin-left: 63px;
 }
 .houseCountColumn .houseCountColumnLabel {
+    margin-left: 3px;
+}
+.houseCountColumn .populationCountColumnLabel {
     margin-left: 13px;
+}
+.houseCountColumn.hasAddButton .populationCountColumnLabel {
+    margin-left: 73px;
 }
 .houseCountColumn.header {
     text-align: right;
