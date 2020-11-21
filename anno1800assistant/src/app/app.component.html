@@ -67,13 +67,31 @@
         <span class="builtColumn">Built</span>
         <span class="tradeColumn">Trade</span>
       </div>
-      <div *ngFor="let factory of island.GetColumnLayouts()[i]" [className]="factory.GetSatisfactionClass(island.PopulationLevels)
+      <div *ngFor="let factory of island.GetColumnLayouts()[i]" [className]="factory.GetSatisfactionClass(island)
        + (factory.ID === FocusedFactoryID ? ' focusedFactory' : '')">
         <label>
           <span class="factoryNameColumn">        
             <span *ngIf="factory.ParentFactory" class="indent"></span>
             <span *ngIf="factory.ParentFactory && factory.ParentFactory.ParentFactory" class="indent"></span>
             <span>{{ factory.Name }}</span>
+            <span *ngIf="factory.CanHaveSilo"
+              title="Use Silo (Bright Harvest DLC)"
+              class="btn btn-sm brightHarvestToggle"
+              (click)="factory.ToggleSilo()"
+              [class.btn-success]="factory.UseSilo"
+              [class.btn-secondary]="!factory.UseSilo"
+              [class.disabled]="!factory.Enabled">
+              <span class="fa fa-leaf"></span>
+            </span>
+            <span *ngIf="factory.CanHaveTractorBarn"
+              title="Use Tractor Barn (Bright Harvest DLC)"
+              class="btn btn-sm brightHarvestToggle"
+              (click)="factory.ToggleTractorBarn()"
+              [class.btn-info]="factory.UseTractorBarn"
+              [class.btn-secondary]="!factory.UseTractorBarn"
+              [class.disabled]="!factory.Enabled">
+              <span class="fa fa-truck"></span>
+            </span>
           </span>
           <span class="enabledColumn">
             <input type="checkbox" *ngIf="!factory.ParentFactory" [(ngModel)]="factory.Enabled" />
@@ -81,11 +99,11 @@
         </label>
         <!-- Hiding the last of the columns for factories whose outputs have zero amounts. These are public service buildings and are only included for population count. -->    
         <span class="productivityColumn" >
-          <input class="hiddenForPublicService form-control" type="number" [(ngModel)]="factory.Productivity" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
+          <input class="hiddenForPublicService form-control" type="number" step="any" [(ngModel)]="factory.Productivity" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
         </span>
         <span class="requiredColumn">
           <span class="hiddenForPublicService">
-            {{ factory.GetRequiredCount(island.PopulationLevels, island.Factories) }}
+            {{ factory.GetRequiredCount(island) }}
           </span>
         </span>
         <span class="builtColumn">

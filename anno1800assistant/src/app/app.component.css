@@ -119,6 +119,7 @@ input[type="number"] {
     width: 200px;
     display: inline-block;
     text-align: left;
+    position: relative;
 }
 
 .factoryHeader {
@@ -209,4 +210,17 @@ input[type="number"] {
 
 .bottomButton {
     margin-left: 5px;
+}
+
+.brightHarvestToggle {
+    padding: .15rem .3rem !important;
+    font-size: .8rem !important;
+    line-height: 1 !important;
+    position: absolute;
+    cursor: pointer;
+    right: 0px;
+    top: 0px;
+}
+.brightHarvestToggle.disabled {
+    cursor: not-allowed;
 }

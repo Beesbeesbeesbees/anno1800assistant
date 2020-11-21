@@ -162,6 +162,18 @@ namespace AnnoXMLParser {
                     factory.IsNewWorld = true;
                 }
 
+                string motorizable = factoryXML.Elements()
+                    ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
+                    ?.SingleOrDefault(x => x.Name == "Motorizable")?.Elements()
+                    ?.SingleOrDefault(x => x.Name == "MotorizableType")?.Value ?? "";
+
+                if (string.Equals(motorizable, "Silo")) {
+                    factory.CanHaveSilo = true;
+                }
+                else if (string.Equals(motorizable, "Tractor")) {
+                    factory.CanHaveTractorBarn = true;
+                }
+
                 factories.Add(factory);
             }
 
@@ -275,6 +287,8 @@ namespace AnnoXMLParser {
         public FactoryIngredient[] Outputs { get; set; }
         public bool IsOldWorld { get; set; }
         public bool IsNewWorld { get; set; }
+        public bool CanHaveSilo { get; set; }
+        public bool CanHaveTractorBarn { get; set; }
     }
 
     public class FactoryIngredient {

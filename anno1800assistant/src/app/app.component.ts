@@ -140,7 +140,9 @@ export class AppComponent implements OnInit {
           BuiltCount: factory.BuiltCount,
           Productivity: factory.Productivity,
           Enabled: factory.Enabled,
-          TradeBalance: factory.TradeBalance
+          TradeBalance: factory.TradeBalance,
+          UseSilo: factory.UseSilo,
+          UseTractorBarn: factory.UseTractorBarn,
         });
       }
 
@@ -149,7 +151,7 @@ export class AppComponent implements OnInit {
         Region: island.Region,
         PopulationLevels: populationLevels,
         Factories: factories,
-        IsMinimized: island.IsMinimized
+        IsMinimized: island.IsMinimized,
       });
     }
 

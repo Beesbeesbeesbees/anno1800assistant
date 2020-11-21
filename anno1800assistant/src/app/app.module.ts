@@ -5,6 +5,7 @@ import { FormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
 import { PopulationService } from 'src/app/data/populations';
 import { RegionService } from './data/region';
+import { ProductsService, Product } from './data/products';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { RegionService } from './data/region';
   ],
   providers: [
     PopulationService,
-    RegionService
+    RegionService,
+    ProductsService,
   ],
   bootstrap: [AppComponent]
 })

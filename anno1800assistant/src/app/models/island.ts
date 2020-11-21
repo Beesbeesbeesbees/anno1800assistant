@@ -7,9 +7,9 @@ export class Island {
     Region: Region;
     IsMinimized: boolean
     PopulationService: PopulationService;
-    PopulationLevels: PopulationLevel[]
-    Factories: Factory[]
-    FactoryGroups: Factory[][]
+    PopulationLevels: PopulationLevel[];
+    Factories: Factory[];
+    FactoryGroups: Factory[][];
   
     constructor(name: string, populationService: PopulationService, saveInfo?: IslandSaveInfo) {
       this.PopulationService = populationService;
@@ -72,6 +72,17 @@ export class Island {
         RegionService.regionFactories[this.Region].forEach(regionFactoryID => {
           this.AddFactoryChain(regionFactoryID, saveInfo);
         })
+
+        if (this.Region === 'OldWorld') {
+          // Manually add grain silos and tractor barns to old world
+          this.AddFactoryChain(101, saveInfo);
+          this.AddFactoryChain(103, saveInfo);
+        }
+        else if (this.Region === 'NewWorld') {
+          // Manually add corn silos and tractor barns to old world
+          this.AddFactoryChain(102, saveInfo);
+          this.AddFactoryChain(103, saveInfo);
+        }
     }
   
   
@@ -96,6 +107,8 @@ export class Island {
           factory.BuiltCount = savedFactoryInfo.BuiltCount;
           factory.Productivity = savedFactoryInfo.Productivity;
           factory.TradeBalance = savedFactoryInfo.TradeBalance;
+          factory.UseSilo = savedFactoryInfo.UseSilo;
+          factory.UseTractorBarn = savedFactoryInfo.UseTractorBarn;
         }
       }
   
@@ -139,6 +152,8 @@ export class Island {
               newFactory.BuiltCount = savedFactoryInfo.BuiltCount;
               newFactory.Productivity = savedFactoryInfo.Productivity;
               newFactory.TradeBalance = savedFactoryInfo.TradeBalance;
+              newFactory.UseSilo = savedFactoryInfo.UseSilo;
+              newFactory.UseTractorBarn = savedFactoryInfo.UseTractorBarn;
             }
           }
   
@@ -152,7 +167,7 @@ export class Island {
     }  
   
     EnabledFactoryGroups() {
-      return this.FactoryGroups.filter(f => f[0].IsInUse(this.PopulationLevels));
+      return this.FactoryGroups.filter(f => f[0].IsInUse(this));
     }
   
     GetColumnLayouts() {
