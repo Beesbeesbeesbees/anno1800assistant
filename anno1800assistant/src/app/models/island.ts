@@ -79,8 +79,13 @@ export class Island {
           this.AddFactoryChain(103, saveInfo);
         }
         else if (this.Region === 'NewWorld') {
-          // Manually add corn silos and tractor barns to old world
+          // Manually add corn silos and tractor barns to new world
           this.AddFactoryChain(102, saveInfo);
+          this.AddFactoryChain(103, saveInfo);
+        }
+        else if (this.Region === 'Enbesa') {
+          // Manually add teff silos and tractor barns to Enbesa
+          this.AddFactoryChain(104, saveInfo);
           this.AddFactoryChain(103, saveInfo);
         }
     }

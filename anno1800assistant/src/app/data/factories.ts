@@ -38,7 +38,7 @@ export class Factories {
             {"ID":122963,"Name":"Wanza Woodcutter","CycleTime":15,"Inputs":[],"Outputs":[{"ProductID":114356,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false,"CanHaveSilo":false,"CanHaveTractorBarn":false},
             {"ID":270044,"Name":"Fuel Station","CycleTime":0,"Inputs":[{"ProductID":1010566,"Amount":1}],"Outputs":[{"ProductID":270042,"Amount":5}],"IsOldWorld":true,"IsNewWorld":false,"CanHaveSilo":false,"CanHaveTractorBarn":false},
             {"ID":269951,"Name":"Silo_Test","CycleTime":0,"Inputs":[{"ProductID":1010192,"Amount":1}],"Outputs":[{"ProductID":1010193,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false,"CanHaveSilo":false,"CanHaveTractorBarn":false},
-            {"ID":269851,"Name":"Grain Farm","CycleTime":60,"Inputs":[],"Outputs":[{"ProductID":1010192,"Amount":1}],"IsOldWorld":true,"IsNewWorld":false,"CanHaveSilo":false,"CanHaveTractorBarn":false},
+            {"ID":269851,"Name":"Grain Farm","CycleTime":60,"Inputs":[],"Outputs":[{"ProductID":1010192,"Amount":1}],"IsOldWorld":true,"IsNewWorld":false,"CanHaveSilo":false,"CanHaveTractorBarn":true},
             {"ID":269850,"Name":"Grain Farm (GASOLINE TEST)","CycleTime":60,"Inputs":[],"Outputs":[{"ProductID":1010192,"Amount":1}],"IsOldWorld":true,"IsNewWorld":false,"CanHaveSilo":false,"CanHaveTractorBarn":false},
             {"ID":119028,"Name":"Fuel Station","CycleTime":15,"Inputs":[{"ProductID":1010566,"Amount":1}],"Outputs":[{"ProductID":270042,"Amount":1}],"IsOldWorld":false,"IsNewWorld":false,"CanHaveSilo":false,"CanHaveTractorBarn":false},
             {"ID":269840,"Name":"Fuel Station","CycleTime":15,"Inputs":[{"ProductID":1010566,"Amount":1}],"Outputs":[{"ProductID":270042,"Amount":1}],"IsOldWorld":false,"IsNewWorld":true,"CanHaveSilo":false,"CanHaveTractorBarn":false},
@@ -183,6 +183,8 @@ export class Factories {
             result.push({ "ID":102, "Name":"Corn Silo", "CycleTime":300, "Inputs":[{ "ProductID":120034, "Amount":1 }], "Outputs":[{ "ProductID": 1, "Amount":5 }], "IsOldWorld": false, "IsNewWorld": true, "CanHaveSilo":false,"CanHaveTractorBarn":false });
             // Tractor barn inputs one fuel every 300 seconds
             result.push({ "ID":103, "Name":"Tractor Barn", "CycleTime":300, "Inputs":[{ "ProductID":270042, "Amount":1 }], "Outputs":[{ "ProductID": 2, "Amount":5 }], "IsOldWorld": true, "IsNewWorld": false, "CanHaveSilo":false,"CanHaveTractorBarn":false });
+            // Teff silo inputs one teff every 300 seconds
+            result.push({ "ID":104, "Name":"Teff Silo", "CycleTime":300, "Inputs":[{ "ProductID":114367, "Amount":1 }], "Outputs":[{ "ProductID": 1, "Amount":5 }], "IsOldWorld": false, "IsNewWorld": true, "CanHaveSilo":false,"CanHaveTractorBarn":false });
 
             this._allFactories = result;
         }
@@ -259,7 +261,7 @@ export class Factory extends FactoryRaw {
         let outputProductID = this.Outputs[0].ProductID;
         let cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;
 
-        if (this.ID === 101 || this.ID === 102) {
+        if (this.ID === 101 || this.ID === 102 || this.ID == 104) {
             // Special case - Count number of farms using silos
             for (var i = 0; i < island.Factories.length; i++) {
                 if (island.Factories[i].UseSilo) {
