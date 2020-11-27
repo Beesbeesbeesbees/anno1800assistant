@@ -291,11 +291,11 @@ export class Factory extends FactoryRaw {
         if (this.ParentFactory) {
             let parentInput = this.ParentFactory.Inputs.filter(i => i.ProductID === outputProductID)[0];
             if (parentInput) {
-                const parentRequiredNormalized100Productivity = this.ParentFactory.GetRequiredCount(island) * this.ParentFactory.Productivity / 100;
-                const parentRequiredFactories = parentRequiredNormalized100Productivity - this.ParentFactory.TradeBalance;
+                const parentRequiredCountUnmodified = this.ParentFactory.GetRequiredCount(island) - this.ParentFactory.TradeBalance;
+                const parentRequiredNormalized100Productivity = parentRequiredCountUnmodified * this.ParentFactory.Productivity / 100;                
                 const parentCycleTime = this.ParentFactory.CycleTime > 0 ? this.ParentFactory.CycleTime : 30;                
                 const childParentFactoryRatio = parentInput.Amount / this.Outputs[0].Amount * cycleTime / parentCycleTime;
-                requiredFactoriesFromParent = parentRequiredFactories * childParentFactoryRatio;
+                requiredFactoriesFromParent = parentRequiredNormalized100Productivity * childParentFactoryRatio;
             }
         }
         
