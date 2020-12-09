@@ -116,7 +116,7 @@
           <input class="hiddenForPublicService form-control" type="number" step="any" [(ngModel)]="island.FactoryCounts[factory.ID].Productivity" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
         </span>
         <span class="requiredColumn">
-          <span class="hiddenForPublicService">
+          <span class="hiddenForPublicService" *ngIf="!factory.RequiredCountIsUserDefined">
             {{ island.GetRequiredCountByFactoryID(factory.ID) }}
           </span>
         </span>

@@ -1,6 +1,6 @@
 import { Region, RegionService } from '../data/region';
 import { PopulationLevel, PopulationService, PopulationLevelSaveInfo } from '../data/populations';
-import { Factory, FactorySaveInfo, Factories } from '../data/factories';
+import { Factory, FactorySaveInfo, Factories, FactoryGrouping } from '../data/factories';
 
 export class Island {
   Name: string
@@ -86,29 +86,35 @@ export class Island {
       }
 
       RegionService.regionFactories[this.Region].forEach(regionFactoryID => {
-        this.AddFactoryChain(regionFactoryID, saveInfo);
+        this.AddFactoryChain(regionFactoryID, saveInfo, 'Regular');
+      });
+      RegionService.regionExports[this.Region].forEach(regionFactoryID => {
+        this.AddFactoryChain(regionFactoryID, saveInfo, 'Export');
+      })
+      RegionService.regionBuildingMaterials[this.Region].forEach(regionFactoryID => {
+        this.AddFactoryChain(regionFactoryID, saveInfo, 'Building Material');
       })
 
       if (this.Region === 'OldWorld') {
         // Manually add grain silos and tractor barns to old world
-        this.AddFactoryChain(101, saveInfo);
-        this.AddFactoryChain(103, saveInfo);
+        this.AddFactoryChain(101, saveInfo, 'Regular');
+        this.AddFactoryChain(103, saveInfo, 'Regular');
       }
       else if (this.Region === 'NewWorld') {
         // Manually add corn silos and tractor barns to new world
-        this.AddFactoryChain(102, saveInfo);
-        this.AddFactoryChain(103, saveInfo);
+        this.AddFactoryChain(102, saveInfo, 'Regular');
+        this.AddFactoryChain(103, saveInfo, 'Regular');
       }
       else if (this.Region === 'Enbesa') {
         // Manually add teff silos and tractor barns to Enbesa
-        this.AddFactoryChain(104, saveInfo);
-        this.AddFactoryChain(103, saveInfo);
+        this.AddFactoryChain(104, saveInfo, 'Regular');
+        this.AddFactoryChain(103, saveInfo, 'Regular');
       }
   }
 
 
-  AddFactoryChain = (factoryID: number, saveInfo: IslandSaveInfo): void => {
-    let factory = new Factory(new Factories().AllFactories.filter(f => f.ID === factoryID)[0]);
+  AddFactoryChain = (factoryID: number, saveInfo: IslandSaveInfo, type: FactoryGrouping): void => {
+    let factory = new Factory(new Factories().AllFactories.filter(f => f.ID === factoryID)[0], type);
 
     this.FactoryCounts[factoryID] = this.FactoryCounts[factoryID] || {
       BuiltCount: 0,
@@ -181,7 +187,7 @@ export class Island {
       const matchedRawFactory = matchedRawFactories[0];
       
       if (matchedRawFactory) {
-        let newFactory = new Factory(matchedRawFactory);
+        let newFactory = new Factory(matchedRawFactory, parentFactory.FactoryGrouping);
 
         this.FactoryCounts[newFactory.ID] = this.FactoryCounts[newFactory.ID] || {
           BuiltCount: 0,

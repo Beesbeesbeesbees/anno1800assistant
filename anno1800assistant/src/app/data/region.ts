@@ -133,4 +133,17 @@ export class RegionService {
         'Arctic': [],
         'Enbesa': [],
     }
+
+    // Buliding materials chains that it may be useful to track (to account for lumberjack huts, furnaces, glassmakers, etc. being used up for consumer goods and building materials at the same time)
+    static regionBuildingMaterials: { [key in Region]: number[] } = {
+        'OldWorld': [
+            100451,  // Lumberjack hut
+            1010296, // Steelworks
+            1010285, // Window Maker
+            1010280, // Concrete Factory
+        ],
+        'NewWorld': [],
+        'Arctic': [],
+        'Enbesa': [],
+    }
 }

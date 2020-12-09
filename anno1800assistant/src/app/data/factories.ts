@@ -207,7 +207,7 @@ class FactoryRaw {
 }
 
 export class Factory extends FactoryRaw {
-    constructor(raw: FactoryRaw) {
+    constructor(raw: FactoryRaw, group: FactoryGrouping) {
         super();
         this.ID = raw.ID;
         this.Name = raw.Name;
@@ -218,10 +218,12 @@ export class Factory extends FactoryRaw {
         this.IsNewWorld = raw.IsNewWorld;
         this.CanHaveSilo = raw.CanHaveSilo;
         this.CanHaveTractorBarn = raw.CanHaveTractorBarn;
+        this.FactoryGrouping = group;
     }
 
     ChildFactories: Factory[] = []
     ParentFactory?: Factory = null
+    FactoryGrouping: FactoryGrouping;
 
     get ParentFactoryOrThisRecursive(): Factory {
         if (!this.ParentFactory) {
@@ -229,6 +231,10 @@ export class Factory extends FactoryRaw {
         }
 
         return this.ParentFactory.ParentFactoryOrThisRecursive;
+    }
+
+    get RequiredCountIsUserDefined(): boolean {
+        return this.FactoryGrouping === 'Building Material' && !this.ParentFactory;
     }
     
     _enabled: boolean = false
@@ -252,6 +258,11 @@ export class Factory extends FactoryRaw {
         if (!this.Enabled) {
             return 0;
         }
+        
+        if (this.RequiredCountIsUserDefined) {
+            // For building materials, required count is just the value that the user inputs into the 'built' column
+            return island.FactoryCounts[this.ID].BuiltCount * island.FactoryCounts[this.ID].Productivity / 100;
+        }
 
         let amountRequiredPerMinute = 0;
         const outputProductID = this.Outputs[0].ProductID;
@@ -260,9 +271,10 @@ export class Factory extends FactoryRaw {
         for (var i = 0; i < island.PopulationLevels.length; i++) {
             amountRequiredPerMinute += island.PopulationLevels[i].GetProductRequirement(outputProductID);
         }
-
+        
         // Population requirements appear to be in tons per second, so multiply by 60
         amountRequiredPerMinute *= 60;
+
 
         let requiredFactoriesFromParent = 0;
         if (this.ParentFactory) {
@@ -334,6 +346,14 @@ export class Factory extends FactoryRaw {
             return true;
         }
 
+        // Special sections enabled?
+        if (this.FactoryGrouping === 'Export' && island.ShowExports) {
+            return true;
+        }
+        if (this.FactoryGrouping === 'Building Material' && island.ShowBuildingMaterials) {
+            return true;
+        }
+
         return false;
     }
 
@@ -363,3 +383,5 @@ export class FactorySaveInfo {
     TradeBalance?: number;
     Productivity?: number;
 }
+
+export type FactoryGrouping = 'Regular' | 'Building Material' | 'Export';
