@@ -243,65 +243,41 @@ export class Factory extends FactoryRaw {
         }
     }
 
-    BuiltCount: number = 0;
-    Productivity: number = 100;
-    ChildLevel: number = 0;
-    TradeBalance: number = 0;
-    UseSilo: boolean = false;
-    UseTractorBarn: boolean = false;
-
-
     GetRequiredCount(island: Island): number {
         if (this.Outputs[0].Amount === 0) {
             // Public service building
             return 0;
         }
 
+        if (!this.Enabled) {
+            return 0;
+        }
+
         let amountRequiredPerMinute = 0;
-        let outputProductID = this.Outputs[0].ProductID;
-        let cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;
-
-        if (this.ID === 101 || this.ID === 102 || this.ID == 104) {
-            // Special case - Count number of farms using silos
-            for (var i = 0; i < island.Factories.length; i++) {
-                if (island.Factories[i].UseSilo) {
-                    amountRequiredPerMinute += island.Factories[i].BuiltCount;
-                }
-            }
+        const outputProductID = this.Outputs[0].ProductID;
+        const cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;
+            
+        for (var i = 0; i < island.PopulationLevels.length; i++) {
+            amountRequiredPerMinute += island.PopulationLevels[i].GetProductRequirement(outputProductID);
         }
-        else if (this.ID == 103) {
-            // Special case - Count number of farms using tractor barns
-            for (var i = 0; i < island.Factories.length; i++) {
-                if (island.Factories[i].UseTractorBarn) {
-                    amountRequiredPerMinute += island.Factories[i].BuiltCount;
-                }
-            }
-        }
-        else {
-            // Default case - Calculate from population needs
-            for (var i = 0; i < island.PopulationLevels.length; i++) {
-                amountRequiredPerMinute += island.PopulationLevels[i].GetProductRequirement(outputProductID);
-            }
 
-            // Population requirements appear to be in tons per second, so multiply by 60
-            amountRequiredPerMinute *= 60;
-        }        
+        // Population requirements appear to be in tons per second, so multiply by 60
+        amountRequiredPerMinute *= 60;
 
         let requiredFactoriesFromParent = 0;
         if (this.ParentFactory) {
             let parentInput = this.ParentFactory.Inputs.filter(i => i.ProductID === outputProductID)[0];
             if (parentInput) {
-                const parentRequiredCountUnmodified = this.ParentFactory.GetRequiredCount(island) - this.ParentFactory.TradeBalance;
-                const parentRequiredNormalized100Productivity = parentRequiredCountUnmodified * this.ParentFactory.Productivity / 100;                
+                const parentRequiredCountUnmodified = this.ParentFactory.GetRequiredCount(island);              
                 const parentCycleTime = this.ParentFactory.CycleTime > 0 ? this.ParentFactory.CycleTime : 30;                
                 const childParentFactoryRatio = parentInput.Amount / this.Outputs[0].Amount * cycleTime / parentCycleTime;
-                requiredFactoriesFromParent = parentRequiredNormalized100Productivity * childParentFactoryRatio;
+                requiredFactoriesFromParent = parentRequiredCountUnmodified * childParentFactoryRatio;
             }
         }
         
         let producedPerMinute = this.Outputs[0].Amount * 60 / cycleTime;
 
-        return Math.max(Math.round((amountRequiredPerMinute / producedPerMinute + requiredFactoriesFromParent) * 100 * 100 / this.Productivity) / 100, 0);
+        return Math.max((amountRequiredPerMinute / producedPerMinute + requiredFactoriesFromParent), 0);
     }
 
     GetSatisfactionClass(island: Island): string {
@@ -321,8 +297,8 @@ export class Factory extends FactoryRaw {
             return result;
         }
 
-        let required = this.GetRequiredCount(island);
-        let satisfaction = this.BuiltCount + this.TradeBalance;
+        const required = island.GetRequiredCountByFactoryID(this.ID);
+        let satisfaction = island.FactoryCounts[this.ID].BuiltCount + island.FactoryCounts[this.ID].TradeBalance;
 
         if(satisfaction >= required) {
             result = result + ' satisfied';
@@ -335,38 +311,6 @@ export class Factory extends FactoryRaw {
         }
 
         return result;
-    }
-
-    ToggleSilo() {
-        if (!this.Enabled) {
-            return;
-        }
-
-        this.UseSilo = !this.UseSilo;
-        
-        if (this.UseSilo) {
-            // +100%, plus an additional product every 3rd cycle = 200 * 4 / 3 = 266.67
-            this.Productivity = 266.67;
-        }
-        else {
-            this.Productivity = 100;
-        }
-    }
-
-    ToggleTractorBarn() {
-        if (!this.Enabled) {
-            return;
-        }
-
-        this.UseTractorBarn = !this.UseTractorBarn;
-        
-        if (this.UseTractorBarn) {
-            // +200%, plus an additional product every 3rd cycle = 300 * 4 / 3 = 400
-            this.Productivity = 400;
-        }
-        else {
-            this.Productivity = 100;
-        }
     }
 
     IsInUse(island: Island) {        
@@ -397,12 +341,7 @@ export class Factory extends FactoryRaw {
         return {
             FactoryID: this.ID,
             ParentFactoryID: this.ParentFactory ? this.ParentFactory.ID : null,
-            Enabled: this.Enabled,
-            BuiltCount: this.BuiltCount,
-            Productivity: this.Productivity,
-            TradeBalance: this.TradeBalance,
-            UseSilo: this.UseSilo,
-            UseTractorBarn: this.UseTractorBarn,
+            Enabled: this.Enabled
         };
     }
 }
@@ -416,9 +355,11 @@ export class FactorySaveInfo {
     FactoryID: number;
     ParentFactoryID?: number;
     Enabled: boolean;
-    BuiltCount: number;
-    Productivity: number;
-    TradeBalance: number;
-    UseSilo: boolean;
-    UseTractorBarn: boolean;
+    
+    // Deprecated fields from before factory counts were combined per island. Included for save backwards-compatibility.
+    UseSilo?: boolean;
+    UseTractorBarn?: boolean;
+    BuiltCount?: number;
+    TradeBalance?: number;
+    Productivity?: number;
 }

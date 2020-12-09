@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, OnChanges, ElementRef, ViewChild } fro
 import { PopulationLevel, PopulationLevelSaveInfo, PopulationService } from './data/populations';
 import { Factory, Factories, FactorySaveInfo } from './data/factories';
 import { RegionService, Region } from './data/region';
-import { IslandSaveInfo, Island } from './models/island';
+import { IslandSaveInfo, Island, IslandFactoryCountSaveInfo } from './models/island';
 
 @Component({
   selector: 'app-root',
@@ -119,11 +119,12 @@ export class AppComponent implements OnInit {
   }
 
   GenerateSaveData(): SaveData {
-    let save: IslandSaveInfo[] = [];
+    const save: IslandSaveInfo[] = [];
     for (var i = 0; i < this.Islands.length; i++) {
-      let island = this.Islands[i];
-      let populationLevels: PopulationLevelSaveInfo[] = [];
-      let factories: FactorySaveInfo[] = [];
+      const island = this.Islands[i];
+      const populationLevels: PopulationLevelSaveInfo[] = [];
+      const factories: FactorySaveInfo[] = [];
+      const factoryCounts: IslandFactoryCountSaveInfo[] = [];
 
       for (var pop = 0; pop < island.PopulationLevels.length; pop++) {
         populationLevels.push({
@@ -133,16 +134,23 @@ export class AppComponent implements OnInit {
       }
 
       for (var fact = 0; fact < island.Factories.length; fact++) {
-        let factory = island.Factories[fact];
+        const factory = island.Factories[fact];
         factories.push({
           FactoryID: factory.ID,
           ParentFactoryID: factory.ParentFactoryOrThisRecursive.ID,
-          BuiltCount: factory.BuiltCount,
-          Productivity: factory.Productivity,
-          Enabled: factory.Enabled,
-          TradeBalance: factory.TradeBalance,
-          UseSilo: factory.UseSilo,
-          UseTractorBarn: factory.UseTractorBarn,
+          Enabled: factory.Enabled,          
+        });
+      }
+
+      const cntKeys = Object.keys(island.FactoryCounts) as any as number[];
+      for (var cnt = 0; cnt < cntKeys.length; cnt++) {
+        factoryCounts.push({
+          FactoryID: cntKeys[cnt],
+          BuiltCount: island.FactoryCounts[cntKeys[cnt]].BuiltCount,
+          Productivity: island.FactoryCounts[cntKeys[cnt]].Productivity,
+          TradeBalance: island.FactoryCounts[cntKeys[cnt]].TradeBalance,
+          UseSilo: island.FactoryCounts[cntKeys[cnt]].UseSilo,
+          UseTractorBarn: island.FactoryCounts[cntKeys[cnt]].UseTractorBarn,
         });
       }
 
@@ -151,6 +159,7 @@ export class AppComponent implements OnInit {
         Region: island.Region,
         PopulationLevels: populationLevels,
         Factories: factories,
+        FactoryCount: factoryCounts,
         IsMinimized: island.IsMinimized,
       });
     }
@@ -196,13 +205,13 @@ export class AppComponent implements OnInit {
   GetTradeBalance(factoryID: number): number {
     let balance = 0;
 
-    for (var i = 0; i < this.Islands.length; i++) {
-      for (var k = 0; k < this.Islands[i].Factories.length; k++) {
-        if (this.Islands[i].Factories[k].ID === factoryID) {
-          balance += (this.Islands[i].Factories[k].Productivity * this.Islands[i].Factories[k].TradeBalance / 100);
-        }
-      }
-    }
+    // for (var i = 0; i < this.Islands.length; i++) {
+    //   for (var k = 0; k < this.Islands[i].Factories.length; k++) {
+    //     if (this.Islands[i].Factories[k].ID === factoryID) {
+    //       balance += (this.Islands[i].Factories[k].Productivity * this.Islands[i].Factories[k].TradeBalance / 100);
+    //     }
+    //   }
+    // }
 
     return balance;
   }

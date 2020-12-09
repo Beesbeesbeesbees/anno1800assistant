@@ -77,18 +77,18 @@
             <span *ngIf="factory.CanHaveSilo"
               title="Use Silo (Bright Harvest DLC)"
               class="btn btn-sm brightHarvestToggle"
-              (click)="factory.ToggleSilo()"
-              [class.btn-success]="factory.UseSilo"
-              [class.btn-secondary]="!factory.UseSilo"
+              (click)="island.ToggleSilo(factory)"
+              [class.btn-success]="island.FactoryCounts[factory.ID].UseSilo"
+              [class.btn-secondary]="!island.FactoryCounts[factory.ID].UseSilo"
               [class.disabled]="!factory.Enabled">
               <span class="fa fa-leaf"></span>
             </span>
             <span *ngIf="factory.CanHaveTractorBarn"
               title="Use Tractor Barn (Bright Harvest DLC)"
               class="btn btn-sm brightHarvestToggle"
-              (click)="factory.ToggleTractorBarn()"
-              [class.btn-info]="factory.UseTractorBarn"
-              [class.btn-secondary]="!factory.UseTractorBarn"
+              (click)="island.ToggleTractorBarn(factory)"
+              [class.btn-info]="island.FactoryCounts[factory.ID].UseTractorBarn"
+              [class.btn-secondary]="!island.FactoryCounts[factory.ID].UseTractorBarn"
               [class.disabled]="!factory.Enabled">
               <span class="fa fa-truck"></span>
             </span>
@@ -99,18 +99,18 @@
         </label>
         <!-- Hiding the last of the columns for factories whose outputs have zero amounts. These are public service buildings and are only included for population count. -->    
         <span class="productivityColumn" >
-          <input class="hiddenForPublicService form-control" type="number" step="any" [(ngModel)]="factory.Productivity" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
+          <input class="hiddenForPublicService form-control" type="number" step="any" [(ngModel)]="island.FactoryCounts[factory.ID].Productivity" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
         </span>
         <span class="requiredColumn">
           <span class="hiddenForPublicService">
-            {{ factory.GetRequiredCount(island) }}
+            {{ island.GetRequiredCountByFactoryID(factory.ID) }}
           </span>
         </span>
         <span class="builtColumn">
-          <input class="hiddenForPublicService form-control" type="number" step="any" [(ngModel)]="factory.BuiltCount" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
+          <input class="hiddenForPublicService form-control" type="number" step="any" [(ngModel)]="island.FactoryCounts[factory.ID].BuiltCount" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
         </span>
         <span class="tradeColumn" [attr.title]="'Total worldwide trade balance for ' + factory.Name + ' is ' + GetTradeBalance(factory.ID)">
-          <input [className]="'hiddenForPublicService form-control' + (IsTradeBalanced(factory.ID) ? '' : ' unbalancedTrade')" type="number" step="any" [(ngModel)]="factory.TradeBalance" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
+          <input [className]="'hiddenForPublicService form-control' + (IsTradeBalanced(factory.ID) ? '' : ' unbalancedTrade')" type="number" step="any" [(ngModel)]="island.FactoryCounts[factory.ID].TradeBalance" [disabled]="!factory.Enabled" (focus)="SetFocusedFactoryID(factory.ID)" (focusout)="ClearFocusedFactoryID()" />
         </span>
       </div>
     </span>
