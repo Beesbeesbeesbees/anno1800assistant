@@ -11,6 +11,8 @@ export class Island {
   Factories: Factory[];
   FactoryGroups: Factory[][];
   FactoryCounts: { [key: number]: IslandFactoryCount }
+  ShowBuildingMaterials: boolean;
+  ShowExports: boolean;
 
   constructor(name: string, populationService: PopulationService, saveInfo?: IslandSaveInfo) {
     this.PopulationService = populationService;
@@ -60,6 +62,8 @@ export class Island {
 
           this.Region = saveInfo.Region || this.Region;
           this.IsMinimized = saveInfo.IsMinimized;
+          this.ShowBuildingMaterials = saveInfo.ShowBuildingMaterials;
+          this.ShowExports = saveInfo.ShowExports;
           this.PopulationLevels = this.PopulationService.getNewPopulationForRegion(this.Region);      
         
           for (var i = 0; i < saveInfo.PopulationLevels.length; i++) {
@@ -250,6 +254,7 @@ export class Island {
           continue;
         }
   
+        // Account for trade balance here
         result += this.Factories[i].GetRequiredCount(this);
       }  
     }
@@ -316,23 +321,31 @@ export class Island {
     else {
       this.FactoryCounts[factory.ID].Productivity = 100;
     }
-}
+  }
 
-ToggleTractorBarn(factory: Factory) {
-  if (!factory.Enabled) {
-        return;
-    }
+  ToggleTractorBarn(factory: Factory) {
+    if (!factory.Enabled) {
+          return;
+      }
 
-    this.FactoryCounts[factory.ID].UseTractorBarn = !this.FactoryCounts[factory.ID].UseTractorBarn;
-    
-    if (this.FactoryCounts[factory.ID].UseTractorBarn) {
-        // +200%, plus an additional product every 3rd cycle = 300 * 4 / 3 = 400
-        this.FactoryCounts[factory.ID].Productivity = 400;
-    }
-    else {
-      this.FactoryCounts[factory.ID].Productivity = 100;
-    }
-}
+      this.FactoryCounts[factory.ID].UseTractorBarn = !this.FactoryCounts[factory.ID].UseTractorBarn;
+      
+      if (this.FactoryCounts[factory.ID].UseTractorBarn) {
+          // +200%, plus an additional product every 3rd cycle = 300 * 4 / 3 = 400
+          this.FactoryCounts[factory.ID].Productivity = 400;
+      }
+      else {
+        this.FactoryCounts[factory.ID].Productivity = 100;
+      }
+  }
+
+  ToggleShowBuildingMaterials() {
+    this.ShowBuildingMaterials = !this.ShowBuildingMaterials;
+  }  
+
+  ToggleShowExports() {
+    this.ShowExports = !this.ShowExports;
+  }
 
   ToggleMinimized() {
     this.IsMinimized = !this.IsMinimized;
@@ -343,6 +356,8 @@ export class IslandSaveInfo {
   Name: string
   Region: Region
   IsMinimized: boolean
+  ShowBuildingMaterials: boolean;
+  ShowExports: boolean;
   FactoryCount: IslandFactoryCountSaveInfo[]
   PopulationLevels: PopulationLevelSaveInfo[]
   Factories: FactorySaveInfo[]

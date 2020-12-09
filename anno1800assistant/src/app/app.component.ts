@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
 
   regionOptions = RegionService.regionFriendlyNameMap;
   regionColorMap = RegionService.regionColorMap;
+  regionExports = RegionService.regionExports;
   Islands: Island[]
   Shift_key_held: boolean = false;
   Ctrl_key_held: boolean = false;
@@ -161,6 +162,8 @@ export class AppComponent implements OnInit {
         Factories: factories,
         FactoryCount: factoryCounts,
         IsMinimized: island.IsMinimized,
+        ShowBuildingMaterials: island.ShowBuildingMaterials,
+        ShowExports: island.ShowExports,
       });
     }
 

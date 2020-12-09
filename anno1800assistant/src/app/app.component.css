@@ -64,7 +64,7 @@ input[type="number"] {
     z-index: 999999999;
 }
 
-.houseCountColumn {
+.houseCountColumn, .extraShowToggles {
     width: auto;
     display: inline-block;
 }
@@ -99,6 +99,17 @@ input[type="number"] {
 }
 .houseCountColumn:last-child {
     width: 50px;
+}
+
+.extraShowToggles {
+    margin-top: 2px;
+    margin-left: 30px;
+    vertical-align: top;
+}
+.extraShowToggles .fa {
+    margin-left: 5px;
+    cursor: pointer;
+    z-index: 999999999;
 }
 
 .addHouseButton {

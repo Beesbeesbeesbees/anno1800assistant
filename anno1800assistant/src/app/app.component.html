@@ -51,6 +51,20 @@
           <!-- Third Row - Population -->
           <span class="populationCountColumnLabel">{{ popLevel.GetPopulation(island.Factories) }}</span>
         </span>
+        
+        <!-- Export and Building Materials Toggles -->
+        <span class="extraShowToggles">
+          <span>Extra Materials</span>
+          <span *ngIf="island.ShowBuildingMaterials" class="fa fa-eye-slash" (click)="island.ToggleShowBuildingMaterials()"></span>
+          <span *ngIf="!island.ShowBuildingMaterials" class="fa fa-eye" (click)="island.ToggleShowBuildingMaterials()"></span>
+          <br />
+          <span *ngIf="regionExports[island.Region].length > 0">
+            Exports
+            <span *ngIf="island.ShowExports" class="fa fa-eye-slash" (click)="island.ToggleShowExports()"></span>
+            <span *ngIf="!island.ShowExports" class="fa fa-eye" (click)="island.ToggleShowExports()"></span>
+          </span>
+          <br /><br />
+        </span>
         <br />
       </span>
     </span>

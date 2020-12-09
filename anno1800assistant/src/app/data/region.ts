@@ -121,4 +121,16 @@ export class RegionService {
             114464, // Lanternsmith
         ]
     };
+
+    // Factories that are not consumed by the population in the region, but are still useful to calculate due to exports
+    static regionExports: { [key in Region]: number[] } = {
+        'OldWorld': [],
+        'NewWorld': [
+            1010333, // Caoutchouc Plantation
+            1010339, // Pearl Farm
+            101311,  // Gold Mine
+        ],
+        'Arctic': [],
+        'Enbesa': [],
+    }
 }
