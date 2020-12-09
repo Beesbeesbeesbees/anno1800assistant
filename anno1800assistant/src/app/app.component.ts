@@ -205,13 +205,12 @@ export class AppComponent implements OnInit {
   GetTradeBalance(factoryID: number): number {
     let balance = 0;
 
-    // for (var i = 0; i < this.Islands.length; i++) {
-    //   for (var k = 0; k < this.Islands[i].Factories.length; k++) {
-    //     if (this.Islands[i].Factories[k].ID === factoryID) {
-    //       balance += (this.Islands[i].Factories[k].Productivity * this.Islands[i].Factories[k].TradeBalance / 100);
-    //     }
-    //   }
-    // }
+    for (var i = 0; i < this.Islands.length; i++) {
+      const factoryCount = this.Islands[i].FactoryCounts[factoryID];
+      if (factoryCount) {
+        balance += factoryCount.Productivity * factoryCount.TradeBalance / 100;
+      }
+    }
 
     return balance;
   }
