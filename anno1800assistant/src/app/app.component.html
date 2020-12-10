@@ -91,7 +91,7 @@
             <span *ngIf="factory.CanHaveSilo"
               title="Use Silo (Bright Harvest DLC)"
               class="btn btn-sm brightHarvestToggle"
-              (click)="island.ToggleSilo(factory)"
+              (click)="$event.preventDefault(); island.ToggleSilo(factory)"
               [class.btn-success]="island.FactoryCounts[factory.ID].UseSilo"
               [class.btn-secondary]="!island.FactoryCounts[factory.ID].UseSilo"
               [class.disabled]="!factory.Enabled">
@@ -100,7 +100,7 @@
             <span *ngIf="factory.CanHaveTractorBarn"
               title="Use Tractor Barn (Bright Harvest DLC)"
               class="btn btn-sm brightHarvestToggle"
-              (click)="island.ToggleTractorBarn(factory)"
+              (click)="$event.preventDefault(); island.ToggleTractorBarn(factory)"
               [class.btn-info]="island.FactoryCounts[factory.ID].UseTractorBarn"
               [class.btn-secondary]="!island.FactoryCounts[factory.ID].UseTractorBarn"
               [class.disabled]="!factory.Enabled">
