@@ -142,7 +142,9 @@ export class RegionService {
             1010285, // Window Maker
             1010280, // Concrete Factory
         ],
-        'NewWorld': [],
+        'NewWorld': [
+            101261,  // Lumberjack hut
+        ],
         'Arctic': [],
         'Enbesa': [],
     }
