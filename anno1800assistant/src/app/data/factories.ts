@@ -254,27 +254,48 @@ export class Factory extends FactoryRaw {
             // Public service building
             return 0;
         }
-
-        if (!this.Enabled) {
-            return 0;
-        }
         
-        if (this.RequiredCountIsUserDefined) {
-            // For building materials, required count is just the value that the user inputs into the 'built' column
-            return island.FactoryCounts[this.ID].BuiltCount * island.FactoryCounts[this.ID].Productivity / 100;
-        }
-
         let amountRequiredPerMinute = 0;
         const outputProductID = this.Outputs[0].ProductID;
-        const cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;
+
+        if (this.ID === 101 || this.ID === 102 || this.ID == 104) {
+            // Special case - Count number of farms using silos
+            const keys = Object.keys(island.FactoryCounts) as any as number[];
+            for (var i = 0; i < keys.length; i++) {
+                if (island.FactoryCounts[keys[i]].UseSilo) {
+                    amountRequiredPerMinute += island.FactoryCounts[keys[i]].BuiltCount;
+                }          
+            }
+        }
+        else if (this.ID == 103) {
+            // Special case - Count number of farms using tractor barns
+            const keys = Object.keys(island.FactoryCounts) as any as number[];
+            for (var i = 0; i < keys.length; i++) {
+                if (island.FactoryCounts[keys[i]].UseTractorBarn) {
+                    amountRequiredPerMinute += island.FactoryCounts[keys[i]].BuiltCount;
+                }                  
+            }
+        }
+        // Default case - Calculate from population needs
+        else {
+            if (!this.Enabled) {
+                return 0;
+            }
             
-        for (var i = 0; i < island.PopulationLevels.length; i++) {
-            amountRequiredPerMinute += island.PopulationLevels[i].GetProductRequirement(outputProductID);
+            if (this.RequiredCountIsUserDefined) {
+                // For building materials, required count is just the value that the user inputs into the 'built' column
+                return island.FactoryCounts[this.ID].BuiltCount * island.FactoryCounts[this.ID].Productivity / 100;
+            }
+            
+            for (var i = 0; i < island.PopulationLevels.length; i++) {
+                amountRequiredPerMinute += island.PopulationLevels[i].GetProductRequirement(outputProductID);
+            }
+            
+            // Population requirements appear to be in tons per second, so multiply by 60
+            amountRequiredPerMinute *= 60;
         }
         
-        // Population requirements appear to be in tons per second, so multiply by 60
-        amountRequiredPerMinute *= 60;
-
+        const cycleTime = this.CycleTime > 0 ? this.CycleTime : 30;            
 
         let requiredFactoriesFromParent = 0;
         if (this.ParentFactory) {
@@ -325,7 +346,7 @@ export class Factory extends FactoryRaw {
         return result;
     }
 
-    IsInUse(island: Island) {        
+    IsInUse(island: Island) { 
         let relevantFactory = this as Factory;
         while (relevantFactory.ParentFactory) {
             relevantFactory = relevantFactory.ParentFactory;

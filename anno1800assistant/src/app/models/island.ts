@@ -234,36 +234,15 @@ export class Island {
   GetRequiredCountByFactoryID(factoryID: number): number {    
     let result = 0;
 
-    if (factoryID === 101 || factoryID === 102 || factoryID == 104) {
-      // Special case - Count number of farms using silos
-      const keys = Object.keys(this.FactoryCounts) as any as number[];
-      for (var i = 0; i < keys.length; i++) {
-        if (this.FactoryCounts[keys[i]].UseSilo) {
-          result += this.FactoryCounts[keys[i]].BuiltCount;
-        }          
+    for (let i = 0; i < this.Factories.length; i++) {
+      
+      if (this.Factories[i].ID !== factoryID) {
+        continue;
       }
-    }
-    else if (factoryID == 103) {
-      // Special case - Count number of farms using tractor barns
-      const keys = Object.keys(this.FactoryCounts) as any as number[];
-      for (var i = 0; i < keys.length; i++) {
-        if (this.FactoryCounts[keys[i]].UseTractorBarn) {
-          result += this.FactoryCounts[keys[i]].BuiltCount;
-        }          
-      }
-    }
-    // Default case - Calculate from population needs
-    else {
-      for (let i = 0; i < this.Factories.length; i++) {
-        
-        if (this.Factories[i].ID !== factoryID) {
-          continue;
-        }
-  
-        // Account for trade balance here
-        result += this.Factories[i].GetRequiredCount(this);
-      }  
-    }
+
+      // Account for trade balance here
+      result += this.Factories[i].GetRequiredCount(this);
+    }      
 
     result /= this.FactoryCounts[factoryID].Productivity / 100;
     result -= this.FactoryCounts[factoryID].TradeBalance;
@@ -280,7 +259,7 @@ export class Island {
     for (var i = 0; i < columnCount; i++) {
       columns[i] = [];
     }
-
+    
     const enabledGroups = this.EnabledFactoryGroups();
     for (var i = 0; i < enabledGroups.length; i++) {
       let smallest = columns[0];
