@@ -166,14 +166,24 @@ export class Island {
       );
 
       // Logic for matching factories:
-      // First, we want to match on 'new world' and 'old world' flags to account for new world vs old world variants of factories
+      // First, we want to match on region flags to account for new world vs old world variants of factories
       // Then, if we have multiple results, we want to use the one that has a valid cycle time (to account for odd entries like fuel depots that have multiple entries in the game data)
       if (matchedRawFactories.length > 1) {
         matchedRawFactories.sort((a, b) => {
-          if (a.IsNewWorld === parentFactory.IsNewWorld && b.IsNewWorld !== parentFactory.IsNewWorld) {
+          const aMatches = (a.IsNewWorld === parentFactory.IsNewWorld ? 1 : 0) +
+            (a.IsOldWorld === parentFactory.IsOldWorld ? 1 : 0) +
+            (a.IsArctic === parentFactory.IsArctic ? 1 : 0) +
+            (a.IsEnbesan === parentFactory.IsEnbesan ? 1 : 0);
+
+          const bMatches = (b.IsNewWorld === parentFactory.IsNewWorld ? 1 : 0) +
+            (b.IsOldWorld === parentFactory.IsOldWorld ? 1 : 0) +
+            (b.IsArctic === parentFactory.IsArctic ? 1 : 0) +
+            (b.IsEnbesan === parentFactory.IsEnbesan ? 1 : 0);
+
+          if (aMatches > bMatches) {
             return -1;
           }
-          if (a.IsNewWorld !== parentFactory.IsNewWorld && b.IsNewWorld === parentFactory.IsNewWorld) {
+          if (bMatches > aMatches) {
             return 1;
           }
           if (a.CycleTime && !b.CycleTime) {

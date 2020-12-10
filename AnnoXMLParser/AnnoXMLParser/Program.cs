@@ -162,6 +162,14 @@ namespace AnnoXMLParser {
                     factory.IsNewWorld = true;
                 }
 
+                if (associatedRegions.IndexOf("Arctic", StringComparison.OrdinalIgnoreCase) >= 0) {
+                    factory.IsArctic = true;
+                }
+
+                if (associatedRegions.IndexOf("Africa", StringComparison.OrdinalIgnoreCase) >= 0) {
+                    factory.IsEnbesan = true;
+                }
+
                 string motorizable = factoryXML.Elements()
                     ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
                     ?.SingleOrDefault(x => x.Name == "Motorizable")?.Elements()
@@ -241,15 +249,35 @@ namespace AnnoXMLParser {
                     .Single(x => x.Name == "Standard").Elements()
                     .Single(x => x.Name == "GUID").Value);
 
+
                 var newFactory = new Factory() {
                     ID = newID,
                     Name = baseFactory.Name,
                     CycleTime = baseFactory.CycleTime,
                     Inputs = baseFactory.Inputs,
-                    Outputs = baseFactory.Outputs,
-                    IsNewWorld = true,
-                    IsOldWorld = false
+                    Outputs = baseFactory.Outputs,                    
                 };
+
+                string associatedRegions = variantXML.Elements()
+                    ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
+                    ?.SingleOrDefault(x => x.Name == "Building")?.Elements()
+                    ?.SingleOrDefault(x => x.Name == "AssociatedRegions")?.Value ?? "";
+
+                if (associatedRegions.IndexOf("Moderate", StringComparison.OrdinalIgnoreCase) >= 0) {
+                    newFactory.IsOldWorld = true;
+                }
+
+                if (associatedRegions.IndexOf("Colony01", StringComparison.OrdinalIgnoreCase) >= 0) {
+                    newFactory.IsNewWorld = true;
+                }
+
+                if (associatedRegions.IndexOf("Arctic", StringComparison.OrdinalIgnoreCase) >= 0) {
+                    newFactory.IsArctic = true;
+                }
+
+                if (associatedRegions.IndexOf("Africa", StringComparison.OrdinalIgnoreCase) >= 0) {
+                    newFactory.IsEnbesan = true;
+                }
 
                 string newCycleTimeString = variantXML.Elements()
                     ?.SingleOrDefault(x => x.Name == "Values")?.Elements()
@@ -287,6 +315,8 @@ namespace AnnoXMLParser {
         public FactoryIngredient[] Outputs { get; set; }
         public bool IsOldWorld { get; set; }
         public bool IsNewWorld { get; set; }
+        public bool IsArctic { get; set; }
+        public bool IsEnbesan { get; set; }
         public bool CanHaveSilo { get; set; }
         public bool CanHaveTractorBarn { get; set; }
     }
