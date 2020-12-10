@@ -71,13 +71,16 @@ export class Island {
               this.PopulationLevels[i].ShowUnused = saveInfo.PopulationLevels[i].ShowUnused;
           }
 
-          for (var i = 0; i < saveInfo.FactoryCount.length; i++) {
-            this.FactoryCounts[saveInfo.FactoryCount[i].FactoryID] = {
-              BuiltCount: saveInfo.FactoryCount[i].BuiltCount,
-              TradeBalance: saveInfo.FactoryCount[i].TradeBalance,
-              Productivity: saveInfo.FactoryCount[i].Productivity,
-              UseSilo: saveInfo.FactoryCount[i].UseSilo,
-              UseTractorBarn: saveInfo.FactoryCount[i].UseTractorBarn,
+          // Old saves may not have factory counts (counts were saved per factory rather than per island)
+          if (saveInfo.FactoryCount) {
+            for (var i = 0; i < saveInfo.FactoryCount.length; i++) {
+              this.FactoryCounts[saveInfo.FactoryCount[i].FactoryID] = {
+                BuiltCount: saveInfo.FactoryCount[i].BuiltCount,
+                TradeBalance: saveInfo.FactoryCount[i].TradeBalance,
+                Productivity: saveInfo.FactoryCount[i].Productivity,
+                UseSilo: saveInfo.FactoryCount[i].UseSilo,
+                UseTractorBarn: saveInfo.FactoryCount[i].UseTractorBarn,
+              }
             }
           }
       }
@@ -142,7 +145,7 @@ export class Island {
 
         // For backwards compatibility
         this.FactoryCounts[factoryID].BuiltCount += (savedFactoryInfo.BuiltCount || 0);
-        this.FactoryCounts[factoryID].Productivity += (savedFactoryInfo.Productivity || 0);
+        this.FactoryCounts[factoryID].Productivity = Math.max(this.FactoryCounts[factoryID].Productivity, (savedFactoryInfo.Productivity || 0));
         this.FactoryCounts[factoryID].TradeBalance += (savedFactoryInfo.TradeBalance || 0);
         this.FactoryCounts[factoryID].UseSilo = this.FactoryCounts[factoryID].UseSilo || (savedFactoryInfo.UseSilo === true);
         this.FactoryCounts[factoryID].UseTractorBarn = this.FactoryCounts[factoryID].UseTractorBarn || (savedFactoryInfo.UseTractorBarn === true);
@@ -215,7 +218,7 @@ export class Island {
 
             // For backwards compatibility
             this.FactoryCounts[newFactory.ID].BuiltCount += (savedFactoryInfo.BuiltCount || 0);
-            this.FactoryCounts[newFactory.ID].Productivity += (savedFactoryInfo.Productivity || 0);
+            this.FactoryCounts[newFactory.ID].Productivity = Math.max(this.FactoryCounts[newFactory.ID].Productivity, (savedFactoryInfo.Productivity || 0));
             this.FactoryCounts[newFactory.ID].TradeBalance += (savedFactoryInfo.TradeBalance || 0);
             this.FactoryCounts[newFactory.ID].UseSilo = this.FactoryCounts[newFactory.ID].UseSilo || (savedFactoryInfo.UseSilo === true);
             this.FactoryCounts[newFactory.ID].UseTractorBarn = this.FactoryCounts[newFactory.ID].UseTractorBarn || (savedFactoryInfo.UseTractorBarn === true);
@@ -239,13 +242,12 @@ export class Island {
       if (this.Factories[i].ID !== factoryID) {
         continue;
       }
-
-      // Account for trade balance here
+      
       result += this.Factories[i].GetRequiredCount(this);
     }      
 
     result /= this.FactoryCounts[factoryID].Productivity / 100;
-    result -= this.FactoryCounts[factoryID].TradeBalance;
+    result -= Math.min(0, this.FactoryCounts[factoryID].TradeBalance);
     return Math.round(result * 100) / 100;
   }
 
